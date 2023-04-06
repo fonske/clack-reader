@@ -1,0 +1,125 @@
+#-----------
+#INPUT SELECT
+#-----------
+input_select:
+  water_softener_status:
+    name: Water softener status
+    options:
+      - Backwash 1st
+      - Brine
+      - Backwash 2nd
+      - Rinse
+      - Fill
+      - Idle
+    initial: Idle
+    
+#-----------
+#INPUT NUMBER
+#-----------
+input_number:
+  water_softener_meter_liters: 
+    name: Water softener l left
+    min: 0
+    max: 999999
+    step: 1
+    unit_of_measurement: l
+    mode: box
+
+#-----------
+#TIMERS
+#-----------
+timer:
+  timer_ws_backwash1:
+    name: Backwash 1st
+    duration: '0:05:04'
+#    duration: '0:03:05'
+  timer_ws_brine:
+    name: Brine
+#    duration: '0:30:11'
+    duration: '0:40:07'
+  timer_ws_backwash:
+    name: Backwash
+#    duration: '0:01:10'
+    duration: '0:03:09'
+  timer_ws_rinse:
+    name: Rinse
+#    duration: '0:03:07'
+    duration: '0:05:14'
+  timer_ws_fill:
+    name: Fill
+#    duration: '0:02:00'
+    duration: '0:02:10'
+  timer_ws_total:
+    name: Total
+#    duration: '1:37:40'
+    duration: '0:55:44'
+
+#-----------
+#SENSORS
+#-----------
+template:
+  sensor:
+    - name: "Water softener m3 left"
+      unit_of_measurement: 'm3'
+      state:  '{{ (((states.number.capaciteit_in_liters.state | int) - (states.input_number.water_softener_meter_liters.state | int))*0.001) | round(2) }}'
+    - name: "Water softener l left"
+      unit_of_measurement: 'l'
+      state:  '{{ (states.number.capaciteit_in_liters.state | int) - (states.input_number.water_softener_meter_liters.state | int) }}'
+    - name: "Water softener days left"
+      unit_of_measurement: ''
+      state:  '{{ (states.number.capaciteit_in_dagen.state | float) - (states.sensor.laatste_regeneratie_dagen.state | float) }}' 
+    - name: "Laatste regeneratie uren"
+      unit_of_measurement: ''
+      state:  '{{ ((as_timestamp(now()) - as_timestamp(states.sensor.clack_geregenereerd_op.last_changed)) / 3600)  | round(2) }}'
+    - name: "Laatste regeneratie dagen"
+      unit_of_measurement: ''
+      state:  '{{ ((as_timestamp(now()) - as_timestamp(states.sensor.clack_geregenereerd_op.last_changed)) / (24 * 3600))  | round(2) }}'
+
+# Saltlevel animation picture on dashboard           
+    - name: "Salt level"
+      state: >
+        {% if states('sensor.clack_procent')|float > 80 %}
+          softener_100
+        {% elif states('sensor.clack_procent')|float > 65 and states('sensor.clack_procent')|float <= 80 %}
+          softener_80
+        {% elif states('sensor.clack_procent')|float > 40 and states('sensor.clack_procent')|float <= 65 %}
+          softener_60
+        {% elif states('sensor.clack_procent')|float > 20 and states('sensor.clack_procent')|float <= 40 %}
+          softener_40
+        {% elif states('sensor.clack_procent')|float > 10 and states('sensor.clack_procent')|float <= 20 %}
+          softener_20
+        {% elif states('sensor.clack_procent')|float > 5 and states('sensor.clack_procent')|float <= 10 %}
+          softener_10
+        {% elif states('sensor.clack_procent')|float > 0 and states('sensor.clack_procent')|float <= 5 %}
+          softener_0
+        {% else %}
+          off
+        {% endif %}
+          
+# Textsensor "Zout bijvullen" ja of nee after sunrise and before sunset
+    - name: "Zout bijvullen?"
+      icon: "mdi:basket-fill"
+      state: >
+        {% set time = now().strftime('%H:%M') %}
+        {% if (states('sensor.clack_hoogte')| float < states('number.zout_bijvullen_afstand')| float) and ('08:00' < time  < '23:00') %}  
+          ja
+        {% else %}
+          nee
+        {% endif %}
+
+utility_meter:
+  waterverbruik_dit_kwartier:  
+    source: sensor.watermeter_stand
+    cycle: quarter-hourly
+  waterverbruik_dit_uur:
+    source: sensor.watermeter_stand
+    cycle: hourly
+  waterverbruik_vandaag:
+    source: sensor.watermeter_stand
+    cycle: daily 
+  waterverbruik_maand:
+    source: sensor.watermeter_stand
+    cycle: monthly
+  waterverbruik_jaar:
+    source: sensor.watermeter_stand
+    cycle: yearly 
