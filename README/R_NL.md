@@ -4,6 +4,9 @@
 Om het lovelace menu volledig te benutten dient via hacs (frontend)
 de volgende repositories geinstalleerd te worden (verkennen en downloaden)
 
+Voorbeeld dahsboard: 
+![Example](printscreen.jpg)
+
 * stack-in-card
 * multiple-entity-row
 * bar-card
