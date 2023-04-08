@@ -36,14 +36,15 @@ You can see the status of the steps on the display.
 In order to get the salt tank level to display you will need to copy the pictures in the `/www/images` directory to your local `/www/images` directory.
 
 ### Relays
-The 2 relays that the clakc head has still need to be set-up.
-* relay1: Counting of water usage 
-* relay2: Regeneration pulse
+The 2 relays that the clack head has still need to be set-up.
+* Relay1: Counting of water usage 
+* Relay2: Regeneration pulse
 
 You can see on the back of the circuit board where to hook each wire up to makred as `RLY1`, `+COM` and  `RLY2` for this to work these need to be connected in the srew terminals on the right side of the Clack board.
+![Schematic](diagram.png)
 
 ### Relay Config
-Extra document (still in dutch sorry) with info can be found here: [Settings PDF](../instelkaart%20clack%20ws1.pdf)
+Extra document (still in dutch sorry) with info can be found here: [Settings PDF](instelkaart%20clack%20ws1.pdf) or the full english manual here: [Manual](Full-CLACKWS1-Manual.pdf)
 
 1. Press `arrow down` and the `next` button for 5 secconds
 2. Press next (softening) is now visible

@@ -38,11 +38,12 @@ naar /www/images kopieren
 
 ### Relais configuratie
 De werking van de 2 relays moeten nog in de clack ingesteld worden:
-Relay 1 is voor de waterpulsen te tellen tijdens normale werking
-Relay 2 is voor eenmalig een puls te geven wanneer de ontharder regenereerd
-Achter op de print staat welk draadje voor wat is om aan de relays aan te sluiten (de 3 aderige stekkerblok)
+* Relay 1 is voor de waterpulsen te tellen tijdens normale werking
+* Relay 2 is voor eenmalig een puls te geven wanneer de ontharder regenereerd
+Achter op de print staat welk draadje voor wat is om aan de relays aan te sluiten (de 3 aderige stekkerblok) 
+![aansluitingen](diagram.png)
 
-Instellen: [Settings PDF](../instelkaart%20clack%20ws1.pdf)
+Instellen: [Settings PDF](instelkaart%20clack%20ws1.pdf) Volledige handleiding in Engels: [Manual](Full-CLACKWS1-Manual.pdf)
 1. next + pijltje omlaag -> 5 sec vasthouden
 2. next (softening) is dan zichtbaar
 3. doordrukken op next tot <rlY 1>  Deze op ON zetten (softening  L)
