@@ -1,20 +1,25 @@
 substitutions:
-  devicename: "Clack"  #devicename: "Clack"
-  friendly_name: ${devicename}
-    # Unique device ID in HA
-  deviceid: "clack"   #deviceid: "clack-mqtt"
-  
+  name: clack
+  device_description: "Esphome component for Clack WS1 softener with ultrasonic sensor saltlevel detection"
+  timezone: "Europe/Amsterdam"  
+
+# In order to use other language, fix include file name below:
+# Currently supported languages are en, nl.
+packages:
+  remote_package:
+    url: https://github.com/fonske/clack-reader
+    ref: main
+    files: 
+      - esphome/.clack-labels-en.yaml
+      - esphome/board-esp32.yaml
+      # - esphome/board-esp8266.yaml
+
 esphome:
-  name: clack  #name: clack-mqtt
+  name: ${name}
   includes:
     - distance-sensor2.h
   platform: ESP32
   board: mhetesp32devkit
-
-# Enable logging
-logger:
-  level: DEBUG
-  baud_rate: 0
 
 # Enable Home Assistant API
 api:
@@ -25,13 +30,13 @@ api:
         meter_value: float
       then:
         - globals.set:
-            id: totalWaterUsage
-            value: !lambda "return ( meter_value ) ;"
+            id: clack_totalWaterUsage
+            value: !lambda "return ( clack_meter_value ) ;"
 
 time:
   - platform: sntp
-    id: sntp_time
-    timezone: "Europe/Amsterdam"
+    id: clack_sntp_time
+    timezone: ${timezone}
     on_time_sync:
       then:
         - logger.log: "Synchronized sntp clock"
@@ -49,42 +54,13 @@ wifi:
     password: "configesp"
     ap_timeout: 15s
 
-captive_portal:
-
-# Enable Web server.
-web_server:
-  port: 80
-
-# activate mqtt broker
-#mqtt:
-#  broker: 10.0.2.4
-#  username: mqttuser
-#  password: mqttuser
-#  reboot_timeout: 0s
-
-#esp32_ble_tracker:
-#  scan_parameters:
-#    interval: 1100ms
-#    window: 1100ms
-#    active: true
-
-#bluetooth_proxy:
-#  active: true
-
 globals:
-  - id: totalWaterUsage
+  - id: clack_totalWaterUsage
     type: float
 # ⬇ Bij het updaten onder de waarde, verander dit in no voor 1 run  ⬇ # 
     restore_value: yes     
 # ⬇ Bij het flashen,pas dit aan! ⬇ #        
     initial_value: '00' 
-
-# Enable uart with ultrasonic sensor      
-uart:
-  id: uart_bus
-  tx_pin: GPIO21  # Transmit Pin: wemos d1 mini - 4 (D2)
-  rx_pin: GPIO22  # Receive Pin: wemos d1 mini - 5 (D1)
-  baud_rate: 9600
 
 #-----------
 #SENSORS
@@ -97,8 +73,8 @@ sensor:
       App.register_component(height_sensor);
       return {height_sensor};
     sensors:
-      name: ${devicename} afstand
-      id:  zoutnivo
+      name: ${clack_distance}
+      id:  clack_distance
       unit_of_measurement: "cm"
       accuracy_decimals: 1
       icon: "mdi:arrow-expand-vertical" 
@@ -109,32 +85,32 @@ sensor:
       on_value:
         then:
           - sensor.template.publish:
-              id: procent
+              id: clack_procent
               state: !lambda |-
                 const float max_distance = id(saltlevel_height_max).state; // heigt in cm to lowest level
                 const float min_distance = id(saltlevel_height_min).state; // height in cm to highest level
-                return int((1-((id(zoutnivo).state - min_distance)/max_distance))*100);
+                return int((1-((id(clack_distance).state - clack_min_distance)/clack_max_distance))*100);
   #              return id(procent).state;
           - sensor.template.publish:
-              id: hoogte
+              id: clack_height
               state: !lambda |-
-                const float max_distance = id(saltlevel_height_max).state;  // height in cm to lowest level
-                return max_distance-id(zoutnivo).state;
+                const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
+                return clack_max_distance-id(clack_distance).state;
 #                return id(hoogte).state;   
           - text_sensor.template.publish:
-              id: zout_bijvullen
+              id: clack_fill_salt
               state: !lambda |-
-                if (id(hoogte).state < id(saltlevel_height_fill).state) {
-                  return {"ja"};
+                if (id(clack_height).state < id(clack_saltlevel_height_fill).state) {
+                  return {"${yes}"};
                 } else {
-                  return {"nee"};
+                  return {"${no}"};
                 }
     
       
   # ultrasonic distance sensor calculate tank_percentage
   - platform: template
-    id: procent
-    name: ${devicename} procent
+    id: clack_procent
+    name: ${clack_procent}
     #    update_interval: 5s
     unit_of_measurement: "%"
     accuracy_decimals: 0
@@ -148,8 +124,8 @@ sensor:
     
   # ultrasonic distance sensor calculate salt level from bottom
   - platform: template
-    id: hoogte
-    name: ${devicename} hoogte
+    id: clack_height
+    name: ${clack_height}
     unit_of_measurement: "cm"
     accuracy_decimals: 1
     icon: "mdi:hydraulic-oil-level" 
@@ -167,8 +143,8 @@ sensor:
 
 #  Watermeter stand  
   - platform: template
-    id: watermeter_total
-    name: "Watermeter stand"
+    id: clack_watermeter_total
+    name: ${clack_watermeter_total}
     state_class: "total_increasing"
     icon: mdi:water
     update_interval: 600s
@@ -179,8 +155,8 @@ sensor:
 
 ####################################################################
   - platform: template  
-    id: water_softener_m3_left
-    name: "Waterontharder m3 over"
+    id: clack_m3_left
+    name: ${clack_m3_left}
     unit_of_measurement: 'm3'
     accuracy_decimals: 2
     update_interval: 600s
@@ -188,90 +164,67 @@ sensor:
   #    return float(id(capacity_liters).state - id(watermeter_total).state) * 0.001;
 
   - platform: template
-    id: water_softener_l_left
-    name: "Waterontharder l over"
+    id: clack_l_left
+    name: ${clack_l_left}
     unit_of_measurement: 'l'
     accuracy_decimals: 0
     update_interval: 600s
-#    lambda: |-
-#      return int(id(capacity_liters).state - id(watermeter_total).state);
-
-# Flow
-#
-#    pin:
-#      number: GPIO16
-#      inverted: true
-#      mode:
-#        input: true
-#        pullup: true
-#    unit_of_measurement: 'L/min'
-#    accuracy_decimals: 2
-#    id: water_usage
-#    name: "Waterontharder flow rate"
-#    update_interval: 10s
-#    filters:
-#      - lambda: return (x / 792);
-
 
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
   - platform: version
-    name: Versie
+    id: clack_version
+    name: ${clack_version}
     hide_timestamp: true
 
   # Expose WiFi information as sensors.
   - platform: wifi_info
+    id: clack_wifi_info
     ip_address:
-      name: ${devicename} IP
+      name: ${name} IP
       
   # Expose last regeneration information as sensor in dutch.
   - platform: template
-    name: ${devicename} geregenereerd op
-    id: regeneration_last
+    name: ${clack_regeneration_last}
+    id: clack_regeneration_last
     icon: mdi:clock-start
     update_interval: 600s
     filters:
       - substitute:
-        - "Jan -> jan"
-        - "Feb -> feb"
-        - "Mar -> maart"
-        - "Apr -> april"
-        - "Mai -> mei"
-        - "Jun -> juni"
-        - "Jul -> juli"
-        - "Aug -> aug"
-        - "Sep -> sept"
-        - "Okt -> okt"
-        - "Nov -> nov"
-        - "Dec -> dec"
-        - "Mon -> ma"
-        - "Tue -> di"
-        - "Wed -> wo"
-        - "Thu -> do"
-        - "Fri -> vrij"
-        - "Sat -> zat"
-        - "Sun -> zon"
+        - "Jan -> ${Jan}"
+        - "Feb -> ${Feb}"
+        - "Mar -> ${Mar}"
+        - "Apr -> ${Apr}"
+        - "Mai -> ${Mai}"
+        - "Jun -> ${Jun}"
+        - "Jul -> ${Jul}"
+        - "Aug -> ${Aug}"
+        - "Sep -> ${Sep}"
+        - "Okt -> ${Okt}"
+        - "Nov -> ${Nov}"
+        - "Dec -> ${Dec}"
+        - "Mon -> ${Mon}"
+        - "Tue -> ${Tue}"
+        - "Wed -> ${Wed}"
+        - "Thu -> ${Thu}"
+        - "Fri -> ${Fri}"
+        - "Sat -> ${Sat}"
+        - "Sun -> ${Sun}"
 
 # Textsensor "Zout bijvullen" ja of nee tussen 8 en 23 uur
   - platform: template
-    name: ${devicename} zout bijvullen
-    id: zout_bijvullen
+    name: ${clack_fill_salt}
+    id: clack_fill_salt
     icon: mdi:basket-fill
     update_interval: 600s
-#    lambda: !lambda |-
-#      if (id(hoogte).state < id(saltlevel_height_fill).state) {
-#        return {"ja"};
-#      } else {
-#        return {"nee"};
-#      }
 
 # imput numbers as boxes for setting the dimensions of the tank and level alarm.
 number:
     ## Set minimum distance (from bottom sensor / underneath plastic cap)
   - platform: template
-    id: saltlevel_height_min
-    name: "Min afstand zout"
+    id: clack_saltlevel_height_min
+    name: ${clack_saltlevel_height_min}
     icon: mdi:toggle-switch-variant
     optimistic: true
     mode: slider
@@ -287,19 +240,19 @@ number:
         - sensor.template.publish:
             id: procent
             state: !lambda |-
-              const float max_distance = id(saltlevel_height_max).state; // heigt in cm to lowest level
-              const float min_distance = id(saltlevel_height_min).state; // height in cm to highest level
-              return int((1-((id(zoutnivo).state - min_distance)/max_distance))*100);
+              const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
+              const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
+              return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
             id: hoogte
             state: !lambda |-
-              const float max_distance = id(saltlevel_height_max).state;  // height in cm to lowest level
-              return max_distance-id(zoutnivo).state; 
+              const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
+              return max_distance-id(clack_distance).state; 
 
     ## Set maximum distance (from bottom sensor / underneath plastic cap) to water level (to measure in pipe?)
   - platform: template
-    id: saltlevel_height_max
-    name: "Max afstand zout"
+    id: clack_saltlevel_height_max
+    name: ${clack_saltlevel_height_max}
     icon: mdi:toggle-switch-variant-off
     optimistic: true
     mode: slider
@@ -315,19 +268,19 @@ number:
         - sensor.template.publish:
             id: procent
             state: !lambda |-
-              const float max_distance = id(saltlevel_height_max).state; // heigt in cm to lowest level
-              const float min_distance = id(saltlevel_height_min).state; // height in cm to highest level
-              return int((1-((id(zoutnivo).state - min_distance)/max_distance))*100);
+              const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
+              const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
+              return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
             id: hoogte
             state: !lambda |-
-              const float max_distance = id(saltlevel_height_max).state;  // height in cm to lowest level
-              return max_distance-id(zoutnivo).state;
+              const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
+              return max_distance-id(clack_distance).state;
 
     ## Set alarm level
   - platform: template
-    id: saltlevel_height_fill
-    name: "Zout bijvullen afstand"
+    id: clack_saltlevel_height_fill
+    name: ${clack_saltlevel_height_fill}
     icon: mdi:hydraulic-oil-temperature
     optimistic: true
     mode: slider
@@ -342,9 +295,9 @@ number:
     on_value:
       then:
         - text_sensor.template.publish:
-            id: zout_bijvullen
+            id: clack_fill_salt
             state: !lambda |-
-              if (id(hoogte).state < id(saltlevel_height_fill).state) {
+              if (id(clack_height).state < id(clack_saltlevel_height_fill).state) {
                 return {"ja"};
               } else {
                 return {"nee"};
@@ -352,8 +305,8 @@ number:
 
     ## Set capacity liters
   - platform: template
-    id: capacity_liters
-    name: "Capaciteit in liters"
+    id: clack_capacity_liters
+    name: ${clack_capacity_liters}
     icon: mdi:water-opacity
     optimistic: true
     mode: slider
@@ -367,8 +320,8 @@ number:
   
     ## Set capacity days  
   - platform: template
-    id: capacity_days
-    name: "Capaciteit in dagen"
+    id: clack_capacity_days
+    name: ${clack_capacity_days}
     icon: mdi:calendar-clock
     optimistic: true
     mode: slider
@@ -380,33 +333,6 @@ number:
     restore_value: yes
     unit_of_measurement: ""
 
-#  - platform: template
-#    id: water_softener_meter_liters
-#    name: "Waterontharder ltr over"
-#    optimistic: true
-#    mode: box
-#    step: 1
-#    min_value: 0
-#    max_value: 99999
-#    initial_value: 3200
-#    restore_value: yes
-
-#    unit_of_measurement: l
-#
-
-### testbutton for reset regeneration_last:
-##  - platform: template
-##    name: "Template Button"
-##    on_press:
-##      then:
-##        - text_sensor.template.publish:
-##            id: regeneration_last
-##            state: !lambda |-
-##              char str[22];
-##              time_t currTime = id(sntp_time).now().timestamp;
-##              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
-##              return  { str };
-
 ## water pulse on D4 / relay 1
 binary_sensor:
   - platform: gpio
@@ -416,27 +342,25 @@ binary_sensor:
       mode:
         input: true
         pullup: true
-    id: watermeter_pulse
-    name: "Watermeter pulse"
+    id: clack_watermeter_pulse
+    name: ${clack_watermeter_pulse}
 #    icon: mdi:toggle-switch-variant
     filters:
       - delayed_on_off: 50ms
     on_press:
       then:
         - sensor.template.publish:
-            id: watermeter_total
+            id: clack_watermeter_total
             state: !lambda |-
               return id(totalWaterUsage) += 2;
         - sensor.template.publish:
-            id: water_softener_m3_left
+            id: clack_m3_left
             state: !lambda |-
-              return float(id(capacity_liters).state - id(watermeter_total).state) * 0.001;
-#              return id(water_softener_m3_left).state;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
         - sensor.template.publish:
-            id: water_softener_l_left
+            id: clack_l_left
             state: !lambda |-
-              return int(id(capacity_liters).state - id(watermeter_total).state);
-#              return id(water_softener_l_left).state;
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
 
   ## regeneration pulse on D5 / relay 2
   - platform: gpio
@@ -446,8 +370,8 @@ binary_sensor:
       mode:
         input: true
         pullup: true
-    id: regeneration_pulse
-    name: "Regeneratie pulse"
+    id: clack_regeneration_pulse
+    name: ${clack_regeneration_pulse}
 #    icon: mdi:toggle-switch-variant
     filters:
       - delayed_on_off: 800ms
@@ -458,25 +382,25 @@ binary_sensor:
 #            state: !lambda |-
 #              return id(totalWaterUsage) = 0;
         - globals.set:
-            id: totalWaterUsage
+            id: clack_totalWaterUsage
             value: '00'
         - text_sensor.template.publish:
-            id: regeneration_last
+            id: clack_regeneration_last
             state: !lambda |-
               char str[22];
-              time_t currTime = id(sntp_time).now().timestamp;
+              time_t currTime = id(clack_sntp_time).now().timestamp;
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
         - sensor.template.publish:
-            id: watermeter_total
+            id: clack_watermeter_total
             state: !lambda |-
-              return id(totalWaterUsage);
+              return id(clack_totalWaterUsage);
         - sensor.template.publish:
-            id: water_softener_m3_left
+            id: clack_m3_left
             state: !lambda |-
-              return float(id(capacity_liters).state - id(watermeter_total).state) * 0.001;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
 #              return id(water_softener_m3_left).state;
         - sensor.template.publish:
-            id: water_softener_l_left
+            id: clack_l_left
             state: !lambda |-
-              return int(id(capacity_liters).state - id(watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);

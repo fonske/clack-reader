@@ -1,0 +1,40 @@
+  clack_distance: Distance
+  clack_procent: Procent
+  clack_heigth: Height
+  clack_watermeter_total: Watermeter total
+  clack_m3_left: Watersoftener m3 left
+  clack_l_left: Watersoftener ltr left
+  clack_version: Version
+  clack_regeneration_last: Watersoftener generated on
+  clack_fill_salt: Fill salt
+  clack_saltlevel_height_min: Min distance salt
+  clack_saltlevel_height_max: Max distance salt
+  clack_saltlevel_height_fill: Fill salt distance
+  clack_capacity_liters: Capacity in liters
+  clack_capacity_days: Capacity in days
+  clack_watermeter_pulse: Watermeter pulse
+  clack_regeneration_pulse: Regeneration pulse
+  unknown: Onbekend
+  hours: hours
+  days: days
+  yes: yes
+  no: no
+  Jan: Jan
+  Feb: Feb
+  Mar: Mar
+  Apr: Apr
+  Mai: Mai
+  Jun: Jun
+  Jul: Jul
+  Aug: Aug
+  Sep: Sep
+  Okt: Okt
+  Nov: Nov
+  Dec: Dec
+  Mon: Mon
+  Tue: Tue
+  Wed: Wed
+  Thu: Thu
+  Fri: Fri
+  Sat: Sat
+  Sun: Sun
