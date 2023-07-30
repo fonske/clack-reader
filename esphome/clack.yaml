@@ -3,15 +3,19 @@ substitutions:
   device_description: "Esphome component for Clack WS1 softener with ultrasonic sensor saltlevel detection"
   timezone: "Europe/Amsterdam"  
 
-# In order to use other language, fix include file name below:
-# Currently supported languages are en, nl.
+# In order to use other language or different ESP chip, fix include file name below:
+# Currently supported languages are en, nl. 
+# ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7
+#
 packages:
   remote_package:
     url: https://github.com/fonske/clack-reader
     ref: main
     files: 
       - esphome/.clack-labels-en.yaml
+      # - esphome/.clack-labels-nl.yaml
       - esphome/board-esp32.yaml
+      # - esphome/board-esp32s3.yaml
       # - esphome/board-esp8266.yaml
 
 esphome:
@@ -139,7 +143,7 @@ sensor:
 # CLACK
 #####################################################################
 
-#  Watermeter stand  
+#  Watermeter  
   - platform: template
     id: clack_watermeter_total
     name: ${clack_watermeter_total}
@@ -151,15 +155,12 @@ sensor:
     lambda: |-
       return id(clack_totalWaterUsage);
 
-####################################################################
   - platform: template  
     id: clack_m3_left
     name: ${clack_m3_left}
     unit_of_measurement: 'm3'
     accuracy_decimals: 2
     update_interval: 600s
-  #  lambda: |-
-  #    return float(id(capacity_liters).state - id(watermeter_total).state) * 0.001;
 
   - platform: template
     id: clack_l_left
@@ -181,7 +182,7 @@ text_sensor:
     ip_address:
       name: ${name} IP
       
-  # Expose last regeneration information as sensor in dutch.
+  # Expose last regeneration information as sensor
   - platform: template
     name: ${clack_regeneration_last}
     id: clack_regeneration_last
@@ -374,10 +375,6 @@ binary_sensor:
       - delayed_on_off: 800ms
     on_press:
       then:
-#        - sensor.template.publish:
-#            id: watermeter_total
-#            state: !lambda |-
-#              return id(totalWaterUsage) = 0;
         - globals.set:
             id: clack_totalWaterUsage
             value: '00'

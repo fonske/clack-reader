@@ -1,16 +1,22 @@
-### ESP32 used is a MH-ET-LIVE, also known as Wemos D32 Mini 
-### https://www.bitsandparts.nl/MH-ET-Live-MiniKit-ESP32-WiFi-Buetooth-ontwikkelboard-p1905277
+### ESP32S3 used is a Lilygo T7-S3
+### https://www.tindie.com/products/lilygo/lilygo-t7-s3-esp32-s3-development-board/
 
 esp32:
-  board: mhetesp32minikit
+  board: adafruit_feather_esp32s3_nopsram
   framework:
     type: arduino
 
 uart:
   id: uart_bus
-  tx_pin: 21
-  rx_pin: 22
+  tx_pin: 13
+  rx_pin: 14
   baud_rate: 9600
+
+# get rid of CDC error
+esphome:
+  platformio_options:
+    board_build.extra_flags:
+      - "-DARDUINO_USB_CDC_ON_BOOT=0"
 
 # Enable/Disable logging
 logger:
