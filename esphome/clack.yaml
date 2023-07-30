@@ -232,7 +232,7 @@ number:
     max_value: 10
     initial_value: 0
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "cm"
     on_value:
       then:
         - sensor.template.publish:
@@ -260,7 +260,7 @@ number:
     max_value: 100
     initial_value: 30
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "cm"
     on_value:
       then:
         - sensor.template.publish:
@@ -330,4 +330,3 @@ number:
     initial_value: 10
     restore_value: yes
     unit_of_measurement: ""
-
