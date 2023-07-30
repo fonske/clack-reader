@@ -42,3 +42,71 @@ captive_portal:
 # Enable Web server.
 web_server:
   port: 80
+
+## watermeter pulse / relay 1
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 16 # mh-et-live: 16, wemos d1 mini -D4
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    id: clack_watermeter_pulse
+    name: ${clack_watermeter_pulse}
+#    icon: mdi:toggle-switch-variant
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      then:
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(clack_totalWaterUsage) += 2;
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+
+  ## regeneration pulse / relay 2
+  - platform: gpio
+    pin:
+      number: 18 # mh-et-live: 18, wemos d1 mini -D5
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    id: clack_regeneration_pulse
+    name: ${clack_regeneration_pulse}
+#    icon: mdi:toggle-switch-variant
+    filters:
+      - delayed_on_off: 800ms
+    on_press:
+      then:
+        - globals.set:
+            id: clack_totalWaterUsage
+            value: '00'
+        - text_sensor.template.publish:
+            id: clack_regeneration_last
+            state: !lambda |-
+              char str[22];
+              time_t currTime = id(clack_sntp_time).now().timestamp;
+              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+              return  { str };
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(clack_totalWaterUsage);
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+#              return id(water_softener_m3_left).state;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
