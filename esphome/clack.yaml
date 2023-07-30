@@ -241,7 +241,7 @@ number:
               const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
               return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
-            id: clack_heigth
+            id: clack_height
             state: !lambda |-
               const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
               return max_distance-id(clack_distance).state; 
