@@ -99,9 +99,9 @@ sensor:
               id: clack_fill_salt
               state: !lambda |-
                 if (id(clack_height).state < id(clack_saltlevel_height_fill).state) {
-                  return {${yes}};
+                  return {"${clack_yes}"};
                 } else {
-                  return {${no}};
+                  return {"${clack_no}"};
                 }
     
       
@@ -295,9 +295,9 @@ number:
             id: clack_fill_salt
             state: !lambda |-
               if (id(clack_height).state < id(clack_saltlevel_height_fill).state) {
-                return {${yes}};
+                return {"${clack_yes}"};
               } else {
-                return {${no}};
+                return {"${clack_no}"};
               }
 
     ## Set capacity liters
