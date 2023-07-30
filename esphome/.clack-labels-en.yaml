@@ -17,8 +17,8 @@ substitutions:
   clack_regeneration_pulse: Regeneration pulse
   hours: hours
   days: days
-  clack_yes: yes
-  clack_no: no
+  clack_yes: "yes"
+  clack_no: "no"
   jan: Jan
   feb: Feb
   mar: Mar
