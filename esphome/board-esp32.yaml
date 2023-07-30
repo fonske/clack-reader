@@ -12,8 +12,8 @@ uart:
   rx_pin: 22
   baud_rate: 9600
 
-substitutions:
-  gpio_pin_pulse_meter: 16 # wemos d1 mini -D4
+vars:
+  gpio_pin_pulse_meter: 16 # wemos d1 mini - D4
   gpio_pin_pulse_regen: 18 ## wemos d1 mini - D5
 
 
