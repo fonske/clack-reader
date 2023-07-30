@@ -12,6 +12,10 @@ uart:
   rx_pin: 14
   baud_rate: 9600
 
+status_led:
+  pin:
+    number: 17
+
 # get rid of CDC error
 esphome:
   platformio_options:
