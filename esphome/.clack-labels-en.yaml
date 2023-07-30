@@ -18,8 +18,8 @@ substitutions:
   unknown: Onbekend
   hours: hours
   days: days
-  yes: yes
-  no: no
+  yes: ja
+  no: nee
   jan: Jan
   feb: Feb
   mar: Mar
