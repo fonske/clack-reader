@@ -17,8 +17,8 @@ substitutions:
   clack_regeneration_pulse: Regeneratie pulse
   hours: uur
   days: dagen
-  clack_yes: yo
-  clack_no: njet
+  clack_yes: ja
+  clack_no: nee
   jan: jan
   feb: feb
   mar: maart
