@@ -331,11 +331,11 @@ number:
     restore_value: yes
     unit_of_measurement: ""
 
-## water pulse on D4 / relay 1
+## watermeter pulse / relay 1
 binary_sensor:
   - platform: gpio
     pin:
-      number: GPIO16 # wemos d1 mini -D4
+      number: ${gpio_pin_pulse_meter} # mh-et-live: 16, wemos d1 mini -D4
       inverted: true
       mode:
         input: true
@@ -360,10 +360,10 @@ binary_sensor:
             state: !lambda |-
               return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
 
-  ## regeneration pulse on D5 / relay 2
+  ## regeneration pulse / relay 2
   - platform: gpio
     pin:
-      number: GPIO18 ## wemos d1 mini - D5
+      number: ${gpio_pin_pulse_regen} # mh-et-live: 18, wemos d1 mini -D5
       inverted: true
       mode:
         input: true
