@@ -15,7 +15,6 @@ substitutions:
   clack_capacity_days: Capacity in days
   clack_watermeter_pulse: Watermeter pulse
   clack_regeneration_pulse: Regeneration pulse
-  unknown: Onbekend
   hours: hours
   days: days
   clack_yes: yee
