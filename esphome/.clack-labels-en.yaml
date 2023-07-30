@@ -15,6 +15,7 @@ substitutions:
   clack_capacity_days: Capacity in days
   clack_watermeter_pulse: Watermeter pulse
   clack_regeneration_pulse: Regeneration pulse
+  clack_ip: Watersoftener IP
   hours: hours
   days: days
   clack_yes: "yes"
