@@ -85,8 +85,8 @@ sensor:
           - sensor.template.publish:
               id: clack_procent
               state: !lambda |-
-                const float max_distance = id(saltlevel_height_max).state; // heigt in cm to lowest level
-                const float min_distance = id(saltlevel_height_min).state; // height in cm to highest level
+                const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
+                const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
                 return int((1-((id(clack_distance).state - clack_min_distance)/clack_max_distance))*100);
   #              return id(procent).state;
           - sensor.template.publish:
@@ -149,7 +149,7 @@ sensor:
     unit_of_measurement: "ltr"
     accuracy_decimals: 0
     lambda: |-
-      return id(totalWaterUsage);
+      return id(clack_totalWaterUsage);
 
 ####################################################################
   - platform: template  
@@ -235,13 +235,13 @@ number:
     on_value:
       then:
         - sensor.template.publish:
-            id: procent
+            id: clack_procent
             state: !lambda |-
               const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
               const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
               return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
-            id: hoogte
+            id: clack_heigth
             state: !lambda |-
               const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
               return max_distance-id(clack_distance).state; 
@@ -263,13 +263,13 @@ number:
     on_value:
       then:
         - sensor.template.publish:
-            id: procent
+            id: clack_procent
             state: !lambda |-
               const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
               const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
               return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
         - sensor.template.publish:
-            id: hoogte
+            id: clack_height
             state: !lambda |-
               const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
               return max_distance-id(clack_distance).state;
@@ -349,7 +349,7 @@ binary_sensor:
         - sensor.template.publish:
             id: clack_watermeter_total
             state: !lambda |-
-              return id(totalWaterUsage) += 2;
+              return id(clack_totalWaterUsage) += 2;
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
