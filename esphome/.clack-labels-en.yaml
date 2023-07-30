@@ -1,7 +1,7 @@
 substitutions:
   clack_distance: Distance
   clack_procent: Procent
-  clack_heigth: Height
+  clack_height: Height
   clack_watermeter_total: Watermeter total
   clack_m3_left: Watersoftener m3 left
   clack_l_left: Watersoftener ltr left
