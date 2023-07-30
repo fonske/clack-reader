@@ -93,7 +93,7 @@ sensor:
               id: clack_height
               state: !lambda |-
                 const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
-                return clack_max_distance-id(clack_distance).state;
+                return max_distance-id(clack_distance).state;
 #                return id(hoogte).state;   
           - text_sensor.template.publish:
               id: clack_fill_salt
