@@ -20,22 +20,22 @@ substitutions:
   days: days
   yes: yes
   no: no
-  Jan: Jan
-  Feb: Feb
-  Mar: Mar
-  Apr: Apr
-  Mai: Mai
-  Jun: Jun
-  Jul: Jul
-  Aug: Aug
-  Sep: Sep
-  Okt: Okt
-  Nov: Nov
-  Dec: Dec
-  Mon: Mon
-  Tue: Tue
-  Wed: Wed
-  Thu: Thu
-  Fri: Fri
-  Sat: Sat
-  Sun: Sun
+  jan: Jan
+  feb: Feb
+  mar: Mar
+  apr: Apr
+  mai: Mai
+  jun: Jun
+  jul: Jul
+  aug: Aug
+  sep: Sep
+  okt: Okt
+  nov: Nov
+  dec: Dec
+  mon: Mon
+  tue: Tue
+  wed: Wed
+  thu: Thu
+  fri: Fri
+  sat: Sat
+  sun: Sun
