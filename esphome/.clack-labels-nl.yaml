@@ -1,7 +1,7 @@
 substitutions:
   clack_distance: Afstand
   clack_procent: Procent
-  clack_heigth: Hoogte
+  clack_height: Hoogte
   clack_watermeter_total: Watermeter stand
   clack_m3_left: Waterontharder m3 over
   clack_l_left: Waterontharder ltr over
@@ -20,24 +20,24 @@ substitutions:
   unknown: Onbekend
   hours: uur
   days: dagen
-  yes: ja
-  no: nee
+  clack_yes: ja
+  clack_no: nee
   jan: jan
   feb: feb
-  Mar: maart
-  Apr: april
-  Mai: mei
-  Jun: juni
-  Jul: juli
-  Aug: aug
-  Sep: sept
-  Okt: okt
-  Nov: nov
-  Dec: dec
-  Mon: ma
-  Tue: Di
-  Wed: wo
-  Thu: do
-  Fri: vrij
-  Sat: sat
-  Sun: zon
+  mar: maart
+  apr: april
+  mai: mei
+  jun: juni
+  jul: juli
+  aug: aug
+  sep: sept
+  okt: okt
+  nov: nov
+  dec: dec
+  mon: ma
+  tue: Di
+  wed: wo
+  thu: do
+  fri: vrij
+  sat: sat
+  sun: zon
