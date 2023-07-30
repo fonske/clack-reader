@@ -29,7 +29,7 @@ api:
       then:
         - globals.set:
             id: clack_totalWaterUsage
-            value: !lambda "return ( clack_meter_value ) ;"
+            value: !lambda "return ( meter_value ) ;"
 
 time:
   - platform: sntp
@@ -87,7 +87,7 @@ sensor:
               state: !lambda |-
                 const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
                 const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
-                return int((1-((id(clack_distance).state - clack_min_distance)/clack_max_distance))*100);
+                return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
   #              return id(procent).state;
           - sensor.template.publish:
               id: clack_height
