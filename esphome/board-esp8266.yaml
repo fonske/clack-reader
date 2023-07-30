@@ -6,10 +6,11 @@ esp8266:
 uart:
   tx_pin: D1
   rx_pin: D2
+  baud_rate: 9600
 
 # Enable/Disable logging - ESP8266 is low on memory, so logger is disabled by default
-# logger:
-#   baud_rate: 0  # <--- super important! for ESP8266
+#  logger:
+#    baud_rate: 0  # <--- super important! for ESP8266
 
 # captative portal and webserver is disabled for ESP8266 due low RAM.
 # if enabled, it leads to unstable operation, Wifi disconnects, etc.
