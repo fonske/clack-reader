@@ -25,4 +25,4 @@ Currently supported languages are en, nl.
 In order to change language, edit file `esphome/clack.yaml`, and change include file (esphome-/.clack-labels-<language>.yaml)
 
 ## Contact
-Contact me: alphonsuijtdehaag at gmail dot com, if you are interested in a PCB with a ESP32 (mh-et-live) and ultrasonic sensor (DFrobot)
+Contact me: alphonsuijtdehaag at gmail dot com, if you are interested in a PCB with a ESP32 (mh-et-live or lilygo ESP32S3-T7) and ultrasonic sensor (DFrobot)
