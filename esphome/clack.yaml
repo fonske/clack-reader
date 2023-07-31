@@ -180,7 +180,7 @@ text_sensor:
   # Expose WiFi information as sensors.
   - platform: wifi_info
     ip_address:
-      name: ${clack_ip}
+      name: ${clack_ip} IP
       
   # Expose last regeneration information as sensor
   - platform: template
