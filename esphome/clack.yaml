@@ -14,9 +14,9 @@ packages:
     files: 
       - esphome/.clack-labels-en.yaml
       # - esphome/.clack-labels-nl.yaml
-      - esphome/board-esp32.yaml
+      # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
-      # - esphome/board-esp8266.yaml
+      - esphome/board-esp8266.yaml
 
 esphome:
   name: ${name}
