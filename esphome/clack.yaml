@@ -89,13 +89,11 @@ sensor:
                 const float max_distance = id(clack_saltlevel_height_max).state; // heigt in cm to lowest level
                 const float min_distance = id(clack_saltlevel_height_min).state; // height in cm to highest level
                 return int((1-((id(clack_distance).state - min_distance)/max_distance))*100);
-  #              return id(procent).state;
           - sensor.template.publish:
               id: clack_height
               state: !lambda |-
                 const float max_distance = id(clack_saltlevel_height_max).state;  // height in cm to lowest level
                 return max_distance-id(clack_distance).state;
-#                return id(hoogte).state;   
           - text_sensor.template.publish:
               id: clack_fill_salt
               state: !lambda |-
@@ -110,7 +108,6 @@ sensor:
   - platform: template
     id: clack_procent
     name: ${clack_procent}
-    #    update_interval: 5s
     unit_of_measurement: "%"
     accuracy_decimals: 0
     icon: "mdi:percent-box-outline" 
@@ -175,7 +172,7 @@ sensor:
   - platform: copy # Reports the WiFi signal strength in %
     source_id: clack_wifi_signal_db
     id: clack_wifi_signal_db_percent
-    name: "WiFi Signal Percent"
+    name: "WiFi Signal"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
@@ -192,7 +189,7 @@ text_sensor:
   # Expose WiFi information as sensors.
   - platform: wifi_info
     ip_address:
-      name: ${clack_ip} IP
+      name: ${clack_ip}
 
   # Expose last regeneration information as sensor
   - platform: template
@@ -222,7 +219,7 @@ text_sensor:
         - "Sat -> ${sat}"
         - "Sun -> ${sun}"
 
-# Textsensor "Zout bijvullen" ja of nee tussen 8 en 23 uur
+# Textsensor "Fill Salt" yes or no.
   - platform: template
     name: ${clack_fill_salt}
     id: clack_fill_salt
