@@ -5,8 +5,8 @@ esp8266:
 
 uart:
   id: uart_bus
-  tx_pin: GPIO4  #D2
-  rx_pin: GPIO5  #D1
+  tx_pin: 4  #D2
+  rx_pin: 5  #D1
   baud_rate: 9600
 
 # Enable/Disable logging - ESP8266 is low on memory, so logger is disabled by default
@@ -22,7 +22,7 @@ uart:
 binary_sensor:
   - platform: gpio
     pin:
-      number: GPIO2 # D4
+      number: 2 # D4
       inverted: true
       mode:
         input: true
@@ -50,7 +50,7 @@ binary_sensor:
   ## regeneration pulse / relay 2
   - platform: gpio
     pin:
-      number: GPIO14 #D5
+      number: 14 #D5
       inverted: true
       mode:
         input: true
