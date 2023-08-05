@@ -16,6 +16,8 @@ substitutions:
   clack_watermeter_pulse: Watermeter pulse
   clack_regeneration_pulse: Regeneration pulse
   clack_ip: Watersoftener IP
+  clack_wifi_signal_db: WiFi Signal dB
+  clack_wifi_signal_db_percent: WiFi Signal
   hours: hours
   days: days
   clack_yes: "yes"

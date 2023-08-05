@@ -15,7 +15,9 @@ substitutions:
   clack_capacity_days: Capaciteit in dagen
   clack_watermeter_pulse: Watermeter pulse
   clack_regeneration_pulse: Regeneratie pulse
-  clack_ip: Waterontharder
+  clack_ip: Waterontharder IP
+  clack_wifi_signal_db: WiFi Signaal dB
+  clack_wifi_signal_db_percent: WiFi Signaal
   hours: uur
   days: dagen
   clack_yes: ja
