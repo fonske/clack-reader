@@ -39,9 +39,6 @@ time:
   - platform: sntp
     id: clack_sntp_time
     timezone: ${timezone}
-    on_time_sync:
-      then:
-        - logger.log: "Synchronized sntp clock"
 
 ota:
 
@@ -168,7 +165,7 @@ sensor:
     unit_of_measurement: 'l'
     accuracy_decimals: 0
     update_interval: 600s
-
+      
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     id: clack_wifi_signal_db
     name: "WiFi Signal dB"
@@ -176,14 +173,14 @@ sensor:
     entity_category: "diagnostic"
 
   - platform: copy # Reports the WiFi signal strength in %
-    source_id: wifi_signal_db
+    source_id: clack_wifi_signal_db
     id: clack_wifi_signal_db_percent
     name: "WiFi Signal Percent"
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "Signal %"
     entity_category: "diagnostic"
-
+    
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
@@ -196,7 +193,7 @@ text_sensor:
   - platform: wifi_info
     ip_address:
       name: ${clack_ip} IP
-      
+
   # Expose last regeneration information as sensor
   - platform: template
     name: ${clack_regeneration_last}
