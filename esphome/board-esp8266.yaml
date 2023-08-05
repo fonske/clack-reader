@@ -5,8 +5,8 @@ esp8266:
 
 uart:
   id: uart_bus
-  tx_pin: GPIO5  #D1
-  rx_pin: GPIO4  #D2
+  tx_pin: GPIO4  #D2
+  rx_pin: GPIO5  #D1
   baud_rate: 9600
 
 # Enable/Disable logging - ESP8266 is low on memory, so logger is disabled by default
