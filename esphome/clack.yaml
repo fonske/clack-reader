@@ -169,6 +169,21 @@ sensor:
     accuracy_decimals: 0
     update_interval: 600s
 
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    id: clack_wifi_signal_db
+    name: "WiFi Signal dB"
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    id: clack_wifi_signal_db_percent
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
