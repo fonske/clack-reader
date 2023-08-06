@@ -95,13 +95,13 @@ button:
         - globals.set:
             id: totalWaterUsage
             value: '00'
- #       - text_sensor.template.publish:
- #           id: clack_regeneration_last
- #           state: !lambda |-
- #             char str[22];
- #             time_t currTime = id(clack_sntp_time).now().timestamp;
- #             strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
- #             return  { str };
+        - text_sensor.template.publish:
+            id: clack_regeneration_last
+            state: !lambda |-
+              char str[22];
+              time_t currTime = id(clack_sntp_time).now().timestamp;
+              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+              return  { str };
         - sensor.template.publish:
             id: clack_watermeter_total
             state: !lambda |-
