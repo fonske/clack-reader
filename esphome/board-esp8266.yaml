@@ -69,7 +69,7 @@ binary_sensor:
             id: clack_regeneration_last
             state: !lambda |-
               char str[22];
-              time_t currTime = id(clack_sntp_time).now().timestamp;
+              time_t currTime = id(sntp_time).now().timestamp;
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
         - sensor.template.publish:
@@ -99,7 +99,7 @@ button:
             id: clack_regeneration_last
             state: !lambda |-
               char str[22];
-              time_t currTime = id(clack_sntp_time).now().timestamp;
+              time_t currTime = id(sntp_time).now().timestamp;
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
         - sensor.template.publish:
