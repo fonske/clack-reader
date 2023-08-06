@@ -102,10 +102,10 @@ button:
  #             time_t currTime = id(clack_sntp_time).now().timestamp;
  #             strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
  #             return  { str };
-#        - sensor.template.publish:
-#            id: clack_watermeter_total
-#            state: !lambda |-
-#              return id(clack_totalWaterUsage);
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(clack_totalWaterUsage);
 #        - sensor.template.publish:
 #            id: clack_m3_left
 #            state: !lambda |-
