@@ -5,9 +5,8 @@ input_select:
   water_softener_status:
     name: Water softener status
     options:
-      - Backwash 1st
+      - Backwash
       - Brine
-      - Backwash 2nd
       - Rinse
       - Fill
       - Idle
@@ -30,17 +29,13 @@ input_number:
 #-----------
 timer:
   timer_ws_backwash1:
-    name: Backwash 1st
+    name: Backwash
     duration: '0:05:04'
 #    duration: '0:03:05'
   timer_ws_brine:
     name: Brine
 #    duration: '0:30:11'
     duration: '0:40:07'
-  timer_ws_backwash:
-    name: Backwash
-#    duration: '0:01:10'
-    duration: '0:03:09'
   timer_ws_rinse:
     name: Rinse
 #    duration: '0:03:07'

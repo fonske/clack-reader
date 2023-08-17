@@ -34,8 +34,8 @@
       value: '{{ (states.sensor.watermeter_stand.state | int ) }}'
   initial_state: true
 ####################################################
-- id: set_water_softener_start_backwash_1st
-  alias: Set water softener start Backwash 1st
+- id: set_water_softener_start_backwash
+  alias: Set water softener start Backwash
   trigger:
   - platform: state
     entity_id:
@@ -51,9 +51,9 @@
   - service: input_select.select_option
     data:
       entity_id: input_select.water_softener_status
-      option: Backwash 1st
+      option: Backwash
   - service: timer.start
-    entity_id: timer.timer_ws_backwash1
+    entity_id: timer.timer_ws_backwash
   - service: timer.start
     entity_id: timer.timer_ws_total
   initial_state: true
@@ -64,7 +64,7 @@
   - platform: event
     event_type: timer.finished
     event_data:
-      entity_id: timer.timer_ws_backwash1
+      entity_id: timer.timer_ws_backwash
   condition:
   - condition: and
     conditions:
@@ -80,8 +80,8 @@
     entity_id: timer.timer_ws_brine
   initial_state: true
 ####################################################
-- id: set_water_softener_start_backwash
-  alias: Set water softener start backwash
+- id: set_water_softener_start_rinse
+  alias: Set water softener start Rinse
   trigger:
   - platform: event
     event_type: timer.finished
@@ -92,29 +92,7 @@
     conditions:
     - condition: state
       entity_id: input_select.water_softener_status
-      state: Brine
-  action:
-  - service: input_select.select_option
-    data:
-      entity_id: input_select.water_softener_status
-      option: Backwash 2nd
-  - service: timer.start
-    entity_id: timer.timer_ws_backwash
-  initial_state: true
-####################################################
-- id: set_water_softener_start_rinse
-  alias: Set water softener start Rinse
-  trigger:
-  - platform: event
-    event_type: timer.finished
-    event_data:
-      entity_id: timer.timer_ws_backwash
-  condition:
-  - condition: and
-    conditions:
-    - condition: state
-      entity_id: input_select.water_softener_status
-      state: Backwash 2nd
+      state: Backwash
   action:
   - service: input_select.select_option
     data:
@@ -181,7 +159,7 @@
     - input_number.water_softener_meter_liters
   condition: []
   action:
-  - service: esphome.clack_meterstand_clack
+  - service: esphome.meterstand_clack
     data:
       meter_value: '{{ (states.input_number.water_softener_meter_liters.state | int
         ) }}'
