@@ -1,0 +1,124 @@
+### ESP32S3 used is a wemos s3 mini
+
+esp32:
+  board: lolin_s3_mini
+  variant: esp32s3
+  framework:
+    type: arduino
+
+uart:
+  id: uart_bus
+  tx_pin: 35  #SDA
+  rx_pin: 36  #SCL
+  baud_rate: 9600
+
+status_led:
+  pin:
+    number: 47
+
+# get rid of CDC error
+esphome:
+  platformio_options:
+    board_build.arduino.memory_type: qio_qspi
+    board_upload.flash_size: 4MB
+    board_upload.ram_size: 327680
+    board_upload_maximum_size: 4193404
+    board_upload_speed: 460800
+    build_flags: [
+      "-DBOARD_HAS_PSRAM",
+      "-DARDUINO_LOLIN_S3_MINI",
+      "-DARDUINO_USB_MODE=1"]
+
+# Enable/Disable logging
+logger:
+  logs:
+    modbus_controller.sensor: WARN
+    modbus_controller.output: WARN
+    modbus.number: WARN
+    esp32.preferences: WARN
+    sensor: WARN
+    text_sensor: WARN
+    dht.sensor: WARN
+    switch: WARN
+    button: WARN
+    number: WARN
+  # baud_rate: 0  # <--- super important! for ESP8266
+
+wifi:
+  ap:
+    ssid: "${name} hotspot"
+    password: "configesp"
+
+captive_portal:
+
+# Enable Web server.
+web_server:
+  port: 80
+
+## watermeter pulse / relay 1
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 16 # lilygo ESP32S3 T7-S3: 12-1, mh-et-live: 16, wemos d1 mini -D4
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    id: clack_watermeter_pulse
+    name: ${clack_watermeter_pulse}
+#    icon: mdi:toggle-switch-variant
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      then:
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(clack_totalWaterUsage) += 2;
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+
+  ## regeneration pulse / relay 2
+  - platform: gpio
+    pin:
+      number: 12 # lilygo ESP32S3 T7-S3: 18, mh-et-live: 18, wemos d1 mini -D5
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    id: clack_regeneration_pulse
+    name: ${clack_regeneration_pulse}
+#    icon: mdi:toggle-switch-variant
+    filters:
+      - delayed_on_off: 800ms
+    on_press:
+      then:
+        - globals.set:
+            id: clack_totalWaterUsage
+            value: '00'
+        - text_sensor.template.publish:
+            id: clack_regeneration_last
+            state: !lambda |-
+              char str[22];
+              time_t currTime = id(clack_sntp_time).now().timestamp;
+              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+              return  { str };
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(clack_totalWaterUsage);
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+#              return id(water_softener_m3_left).state;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
