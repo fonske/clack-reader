@@ -1,7 +1,7 @@
 ### ESP32S3 used is a wemos s3 mini
 
 esp32:
-  board: lolin_s3_mini
+  board: lolin_s3
   variant: esp32s3
   framework:
     type: arduino
