@@ -16,6 +16,7 @@ packages:
       # - esphome/.clack-labels-nl.yaml
       # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
+      # - board-esp32-wemos-s3
       - esphome/board-esp8266.yaml
 
 esphome:
@@ -32,7 +33,7 @@ api:
         meter_value: float
       then:
         - globals.set:
-            id: clack_totalWaterUsage
+            id: totalWaterUsage
             value: !lambda "return ( meter_value ) ;"
 
 time:
@@ -54,7 +55,7 @@ wifi:
     ap_timeout: 15s
 
 globals:
-  - id: clack_totalWaterUsage
+  - id: totalWaterUsage
     type: float
 # ⬇ Bij het updaten onder de waarde, verander dit in no voor 1 run  ⬇ # 
     restore_value: yes     
@@ -147,7 +148,7 @@ sensor:
     unit_of_measurement: "ltr"
     accuracy_decimals: 0
     lambda: |-
-      return id(clack_totalWaterUsage);
+      return id(totalWaterUsage);
 
   - platform: template  
     id: clack_m3_left

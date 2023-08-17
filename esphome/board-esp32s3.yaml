@@ -67,7 +67,7 @@ binary_sensor:
         - sensor.template.publish:
             id: clack_watermeter_total
             state: !lambda |-
-              return id(clack_totalWaterUsage) += 2;
+              return id(totalWaterUsage) += 2;
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
@@ -93,7 +93,7 @@ binary_sensor:
     on_press:
       then:
         - globals.set:
-            id: clack_totalWaterUsage
+            id: totalWaterUsage
             value: '00'
         - text_sensor.template.publish:
             id: clack_regeneration_last
@@ -105,7 +105,7 @@ binary_sensor:
         - sensor.template.publish:
             id: clack_watermeter_total
             state: !lambda |-
-              return id(clack_totalWaterUsage);
+              return id(totalWaterUsage);
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
