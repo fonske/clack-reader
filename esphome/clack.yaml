@@ -3,10 +3,11 @@ substitutions:
   device_description: "Esphome component for Clack WS1 softener with ultrasonic sensor saltlevel detection"
   timezone: "Europe/Amsterdam"  
 
-# In order to use other language or different ESP chip, fix include file name below:
+# In order to use other language or a different ESP chip, fix include file name below:
 # Currently supported languages are en, nl. 
-# ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7
-#
+# ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7,
+# esp32-wemos-s3 is a wemos S3 mini
+
 packages:
   remote_package:
     url: https://github.com/fonske/clack-reader
@@ -16,7 +17,7 @@ packages:
       # - esphome/.clack-labels-nl.yaml
       # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
-      # - board-esp32-wemos-s3
+      # - esphome/board-esp32-wemos-s3
       - esphome/board-esp8266.yaml
 
 esphome:
