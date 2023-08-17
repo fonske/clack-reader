@@ -13,11 +13,12 @@ packages:
     url: https://github.com/fonske/clack-reader
     ref: main
     files: 
-     - esphome/.clack-labels-en.yaml
+      - esphome/.clack-labels-en.yaml
       # - esphome/.clack-labels-nl.yaml
-      - esphome/board-esp32.yaml
+      # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
-      # - esphome/board-esp8266.yaml
+      # - esphome/board-esp32-wemos-s3
+      - esphome/board-esp8266.yaml
 ```
 
 # Translations
@@ -25,4 +26,4 @@ Currently supported languages are en, nl.
 In order to change language, edit file `esphome/clack.yaml`, and change include file (esphome-/.clack-labels-<language>.yaml)
 
 ## Contact
-Contact me: alphonsuijtdehaag at gmail dot com, if you are interested in a PCB with a ESP32 (mh-et-live or lilygo ESP32S3-T7) and ultrasonic sensor (DFrobot)
+Contact me: alphonsuijtdehaag at gmail dot com, if you are interested in a PCB with a ESP32 (mh-et-live or lilygo ESP32S3-T7 or Wemos s3 mini) and ultrasonic sensor (DFrobot)
