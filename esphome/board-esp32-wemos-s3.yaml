@@ -5,7 +5,7 @@ esp32:
   variant: esp32s3
   framework:
     type: arduino
-    version: latest
+#    version: latest
 
 uart:
   id: uart_bus
