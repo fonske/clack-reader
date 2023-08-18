@@ -17,7 +17,7 @@ packages:
       # - esphome/.clack-labels-nl.yaml
       # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
-      # - esphome/board-esp32-wemos-s3
+      # - esphome/board-esp32-wemos-s3.yaml
       - esphome/board-esp8266.yaml
 
 esphome:
