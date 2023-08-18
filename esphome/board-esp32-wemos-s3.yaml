@@ -29,6 +29,8 @@ esphome:
       "-DBOARD_HAS_PSRAM",
       "-DARDUINO_LOLIN_S3_MINI",
       "-DARDUINO_USB_MODE=1"]
+    board_build.extra_flags:
+      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
 
 # Enable/Disable logging
 logger:
