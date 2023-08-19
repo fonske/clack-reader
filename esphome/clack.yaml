@@ -164,12 +164,13 @@ sensor:
     unit_of_measurement: 'l'
     accuracy_decimals: 0
     update_interval: 600s
-      
+
+# Diagnostics wifi and uptime      
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     id: clack_wifi_signal_db
     name: "WiFi Signal dB"
     update_interval: 60s
-    entity_category: "diagnostic"
+    entity_category: diagnostic
 
   - platform: copy # Reports the WiFi signal strength in %
     source_id: clack_wifi_signal_db
@@ -178,8 +179,17 @@ sensor:
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
-    entity_category: "diagnostic"
-    
+    entity_category: diagnostic
+
+  - platform: uptime
+    id: clack_uptime
+    name: ${clack_uptime}
+    unit_of_measurement: ${days}
+    update_interval: 3600s
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.000011574
+
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
@@ -192,6 +202,7 @@ text_sensor:
   - platform: wifi_info
     ip_address:
       name: ${clack_ip}
+      icon: mdi:ip-network
 
   # Expose last regeneration information as sensor
   - platform: template
@@ -326,6 +337,21 @@ number:
     initial_value: 3200
     restore_value: yes
     unit_of_measurement: ""
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(totalWaterUsage);
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+#              return id(water_softener_m3_left).state;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
   
     ## Set capacity days  
   - platform: template
