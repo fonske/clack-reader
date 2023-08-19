@@ -18,6 +18,7 @@ substitutions:
   clack_ip: Waterontharder IP
   clack_wifi_signal_db: WiFi Signaal dB
   clack_wifi_signal_db_percent: WiFi Signaal
+  clack_uptime: Uptime
   hours: uur
   days: dagen
   clack_yes: ja
