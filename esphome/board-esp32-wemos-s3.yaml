@@ -158,3 +158,19 @@ button:
 #              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
         - lambda: |-
             ESP_LOGI("RegTest", "button pressed");
+
+## temporarely test button for testing reg puls
+  - id: clack_set_total_waterusage_button
+    name: Test button totalwaterusage
+    platform: template
+    on_press:
+      then:
+        - globals.set:
+            id: totalWaterUsage
+            value: '99'
+        - sensor.template.publish:
+            id: clack_watermeter_total
+            state: !lambda |-
+              return id(totalWaterUsage);
+        - lambda: |-
+            ESP_LOGI("Test", "99 ltr button test pressed");
