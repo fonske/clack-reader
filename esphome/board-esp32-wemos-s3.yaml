@@ -108,7 +108,7 @@ binary_sensor:
         - text_sensor.template.publish:
             id: clack_regeneration_last
             state: !lambda |-
-              char str[22];
+              char str[32];
               time_t currTime = id(clack_sntp_time).now().timestamp;
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
@@ -139,7 +139,7 @@ button:
         - text_sensor.template.publish:
             id: clack_regeneration_last
             state: !lambda |-
-              char str[22];
+              char str[32];
               time_t currTime = id(clack_sntp_time).now().timestamp;
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
