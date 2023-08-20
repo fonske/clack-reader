@@ -42,3 +42,11 @@ substitutions:
   fri: "Fri"
   sat: "Sat"
   sun: "Sun"
+
+sensor:
+  # Expose last regeneration information as sensor / already in English
+  - platform: template
+    name: ${regeneration_last}
+    id: regeneration_last
+    icon: mdi:clock-start
+    update_interval: never
