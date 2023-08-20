@@ -24,7 +24,7 @@ substitutions:
   clack_yes: ja
   clack_no: nee
 
-sensor:
+text_sensor:
   # Expose last regeneration information as sensor
   - platform: template
     name: ${clack_regeneration_last}
