@@ -23,22 +23,22 @@ substitutions:
   days: days
   clack_yes: "yes"
   clack_no: "no"
-  jan: Jan
-  feb: Feb
-  mar: Mar
-  apr: Apr
-  mai: Mai
-  jun: Jun
-  jul: Jul
-  aug: Aug
-  sep: Sep
-  okt: Okt
-  nov: Nov
-  dec: Dec
-  mon: Mon
-  tue: Tue
-  wed: Wed
-  thu: Thu
-  fri: Fri
-  sat: Sat
-  sun: Sun
+  jan: "Jan"
+  feb: "Feb"
+  mar: "Mar"
+  apr: "Apr"
+  mai: "Mai"
+  jun: "Jun"
+  jul: "Jul"
+  aug: "Aug"
+  sep: "Sep"
+  okt: "Okt"
+  nov: "Nov"
+  dec: "Dec"
+  mon: "Mon"
+  tue: "Tue"
+  wed: "Wed"
+  thu: "Thu"
+  fri: "Fri"
+  sat: "Sat"
+  sun: "Sun"
