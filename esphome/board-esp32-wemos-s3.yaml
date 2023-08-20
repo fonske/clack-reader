@@ -135,7 +135,7 @@ button:
       then:
         - globals.set:
             id: totalWaterUsage
-            value: '00'
+            value: '10'
 #        - text_sensor.template.publish:
 #            id: clack_regeneration_last
 #            state: !lambda |-
@@ -156,3 +156,5 @@ button:
 #            id: clack_l_left
 #            state: !lambda |-
 #              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+        - lambda: |-
+            ESP_LOGI("RegTest", "button pressed");
