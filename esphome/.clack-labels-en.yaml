@@ -23,30 +23,11 @@ substitutions:
   days: days
   clack_yes: "yes"
   clack_no: "no"
-  jan: "Jan"
-  feb: "Feb"
-  mar: "Mar"
-  apr: "Apr"
-  mai: "Mai"
-  jun: "Jun"
-  jul: "Jul"
-  aug: "Aug"
-  sep: "Sep"
-  okt: "Okt"
-  nov: "Nov"
-  dec: "Dec"
-  mon: "Mon"
-  tue: "Tue"
-  wed: "Wed"
-  thu: "Thu"
-  fri: "Fri"
-  sat: "Sat"
-  sun: "Sun"
 
 sensor:
   # Expose last regeneration information as sensor / already in English
   - platform: template
-    name: ${regeneration_last}
-    id: regeneration_last
+    name: ${clack_regeneration_last}
+    id: clack_regeneration_last
     icon: mdi:clock-start
     update_interval: never
