@@ -204,40 +204,12 @@ text_sensor:
       name: ${clack_ip}
       icon: mdi:ip-network
 
-  # Expose last regeneration information as sensor
-  - platform: template
-    name: ${clack_regeneration_last}
-    id: clack_regeneration_last
-    icon: mdi:clock-start
-    update_interval: 600s
-    filters:
-      - substitute:
-        - "Jan -> ${jan}"
-        - "Feb -> ${feb}"
-        - "Mar -> ${mar}"
-        - "Apr -> ${apr}"
-        - "Mai -> ${mai}"
-        - "Jun -> ${jun}"
-        - "Jul -> ${jul}"
-        - "Aug -> ${aug}"
-        - "Sep -> ${sep}"
-        - "Okt -> ${okt}"
-        - "Nov -> ${nov}"
-        - "Dec -> ${dec}"
-        - "Mon -> ${mon}"
-        - "Tue -> ${tue}"
-        - "Wed -> ${wed}"
-        - "Thu -> ${thu}"
-        - "Fri -> ${fri}"
-        - "Sat -> ${sat}"
-        - "Sun -> ${sun}"
-
-# Textsensor "Fill Salt" yes or no.
+  # Textsensor "Fill Salt" yes or no.
   - platform: template
     name: ${clack_fill_salt}
     id: clack_fill_salt
     icon: mdi:basket-fill
-    update_interval: 600s
+    update_interval: never
 
 # imput numbers as boxes for setting the dimensions of the tank and level alarm.
 number:
