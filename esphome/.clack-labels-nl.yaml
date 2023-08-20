@@ -23,22 +23,32 @@ substitutions:
   days: dagen
   clack_yes: ja
   clack_no: nee
-  jan: "jan"
-  feb: "feb"
-  mar: "mrt"
-  apr: "apr"
-  mai: "mei"
-  jun: "juni"
-  jul: "juli"
-  aug: "aug"
-  sep: "sept"
-  okt: "okt"
-  nov: "nov"
-  dec: "dec"
-  mon: "ma"
-  tue: "di"
-  wed: "wo"
-  thu: "do"
-  fri: "vrij"
-  sat: "zat"
-  sun: "zon"
+
+sensor:
+  # Expose last regeneration information as sensor
+  - platform: template
+    name: ${regeneration_last}
+    id: regeneration_last
+    icon: mdi:clock-start
+    update_interval: never
+    filters:   
+      - substitute:
+        - "Jan -> jan"
+        - "Feb -> feb"
+        - "Mar -> mar"
+        - "Apr -> apr"
+        - "Mai -> mei"
+        - "Jun -> jun"
+        - "Jul -> jul"
+        - "Aug -> aug"
+        - "Sep -> sep"
+        - "Okt -> okt"
+        - "Nov -> nov"
+        - "Dec -> dec"
+        - "Mon -> ma"
+        - "Tue -> di"
+        - "Wed -> wo"
+        - "Thu -> do"
+        - "Fri -> vr"
+        - "Sat -> zat"
+        - "Sun -> zon" 
