@@ -27,8 +27,8 @@ substitutions:
 sensor:
   # Expose last regeneration information as sensor
   - platform: template
-    name: ${regeneration_last}
-    id: regeneration_last
+    name: ${clack_regeneration_last}
+    id: clack_regeneration_last
     icon: mdi:clock-start
     update_interval: never
     filters:   
