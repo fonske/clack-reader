@@ -23,22 +23,22 @@ substitutions:
   days: dagen
   clack_yes: ja
   clack_no: nee
-  jan: jan
-  feb: feb
-  mar: maart
-  apr: april
-  mai: mei
-  jun: juni
-  jul: juli
-  aug: aug
-  sep: sept
-  okt: okt
-  nov: nov
-  dec: dec
-  mon: ma
-  tue: di
-  wed: wo
-  thu: do
-  fri: vrij
-  sat: sat
-  sun: zon
+  jan: "jan"
+  feb: "feb"
+  mar: "mrt"
+  apr: "apr"
+  mai: "mei"
+  jun: "juni"
+  jul: "juli"
+  aug: "aug"
+  sep: "sept"
+  okt: "okt"
+  nov: "nov"
+  dec: "dec"
+  mon: "ma"
+  tue: "di"
+  wed: "wo"
+  thu: "do"
+  fri: "vrij"
+  sat: "zat"
+  sun: "zon"
