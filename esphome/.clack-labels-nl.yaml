@@ -1,8 +1,8 @@
 substitutions:
-  clack_distance: Afstand
-  clack_procent: Procent
-  clack_height: Hoogte
-  clack_watermeter_total: Watermeter stand
+  clack_distance: Zoutniveau afstand
+  clack_procent: Zoutniveau procent
+  clack_height: Zoutniveau hoogte
+  clack_watermeter_total: Watermeter
   clack_m3_left: Waterontharder m3 over
   clack_l_left: Waterontharder ltr over
   clack_version: Versie
