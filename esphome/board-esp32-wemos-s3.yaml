@@ -165,17 +165,17 @@ button:
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
         - sensor.template.publish:
-            id: clack_watermeter_total
+            id: clack_watermeter
             state: !lambda |-
               return id(totalWaterUsage);
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
-              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
-              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
         - lambda: |-
             ESP_LOGI("RegTest", "button pressed");
 
@@ -189,16 +189,16 @@ button:
             id: totalWaterUsage
             value: '300'
         - sensor.template.publish:
-            id: clack_watermeter_total
+            id: clack_watermeter
             state: !lambda |-
               return id(totalWaterUsage);
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
-              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
-              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
         - lambda: |-
             ESP_LOGI("Test", "300 ltr button test pressed");
