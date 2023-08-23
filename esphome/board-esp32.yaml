@@ -55,17 +55,17 @@ binary_sensor:
     on_press:
       then:
         - sensor.template.publish:
-            id: clack_watermeter_total
+            id: clack_watermeter
             state: !lambda |-
               return id(totalWaterUsage) += 2;
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
-              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
-              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
 
   ## regeneration pulse / relay 2
   - platform: gpio
@@ -93,15 +93,15 @@ binary_sensor:
               strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
               return  { str };
         - sensor.template.publish:
-            id: clack_watermeter_total
+            id: clack_watermeter
             state: !lambda |-
               return id(totalWaterUsage);
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
-              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
 #              return id(water_softener_m3_left).state;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
-              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
