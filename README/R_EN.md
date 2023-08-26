@@ -2,7 +2,7 @@
 
 ## Lovelace menu
 In order to use the front-end as shown here: 
-![Example](printscreen_EN.jpg)
+![Example](Printscreen_EN.jpg)
 
 You will need to install HACS and the following plugins:
 
