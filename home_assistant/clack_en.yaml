@@ -88,7 +88,7 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - binary_sensor.regeneratie_pulse
+      - binary_sensor.regeneration_pulse
       to: 'on'
     - platform: state
       entity_id: button.test_button_reg_pulse
