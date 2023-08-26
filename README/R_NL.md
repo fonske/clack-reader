@@ -5,19 +5,18 @@ Om het lovelace menu volledig te benutten dient via hacs (frontend)
 de volgende repositories geinstalleerd te worden (verkennen en downloaden)
 
 Voorbeeld dahsboard: 
-![Example](printscreen.jpg)
+![Example](Printscreen_NL.jpg)
 
 * stack-in-card
 * multiple-entity-row
 * bar-card
 * apexcharts  (staafdiagram)
 
-## Automations
-[automations.yaml](../automations.yaml) samenvoegen met de bestaande automations.yaml
-en [clack.yaml](../clack.yaml) samenvoegen met configuration.yaml 
+## Automations en sensor(s)
+[clack.yaml](../clack.yaml) samenvoegen met configuration.yaml of beter:
 
 ### Bestand op eigen lokatie: 
-of op een eigen lokatie zetten:
+[clack.yaml](../clack.yaml) op een eigen lokatie zetten:
 configuration.yaml aanpassen naar:
 
 ```yml
@@ -31,7 +30,8 @@ HA opnieuw starten
 ## Configuratie
 ### Clack.yaml
 In clack.yaml moeten de tijden nog aangepast worden aan je eigen tijden (timer) voor de simulatie van het regenereren in HA.
-Even met een stopwatch ofzo, nadat de regeneratie handmatig gestart is. Elke keer dat de inwendige schuif beweegt is een stap (zie ook het display vd clack)
+Even met een stopwatch ofzo, nadat de regeneratie handmatig gestart is. Elke keer dat de inwendige schuif beweegt is een stap (zie ook op het display vd clack)
+Het kan zijn, dat je clack 5 cyclussen heeft ipv 4. Backwash, brine, backwash, rinse, fill. In de code is de 2e backwash eruit gehaald, wat het meest gangbaar is, voor de meeste ontharders. Anders kan je een timer toevoegen en de code wat aanpassen in clack.yaml
 
 Bijgevoegd ook de plaatjes voor de simulatie van het zoutniveau:
 naar /www/images kopieren
@@ -63,6 +63,8 @@ Succes!
 Het monteren van de esp print in de behuizing is wel wat lastig.
 De ESP print steekt achter de rand naar binnen, van de clack behuizing zodat deze weer gesloten kan worden met de kap.
 Soms wil het esp printje uit de pinnen komen. (iets of wat speling mag wel)
+
+Update: met een wemos s3 mini is dit probleem verholpen. Deze is wat kleiner.
 
 
 
