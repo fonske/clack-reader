@@ -27,8 +27,8 @@ Now you can create a folder called `packages` in the folder `config` and place t
 Mare sure to restart HomeAssistant.
 
 ## Configuration
-### Clack.yaml
-You will need to time your clack head (with a stopwatch) and adjust the times in the `clack.yaml` to the time your clack actually takes per step. 
+### Clack_EN.yaml  or Clack_NL.yaml
+You will need to time your clack head (with a stopwatch) and adjust the times in the `clack_EN.yaml` or `clack_NL.yaml`to the time your clack actually takes per step. 
 
 You can see the status of the steps on the display.
 
@@ -66,6 +66,8 @@ Mounting the circuitboard with ESP in the Clack housing can be tricky.
 To be able to close the Clack reader the Circuitboard will point slightly inwards.
 
 The ESP might come loose when attempting to close the clack head.
+
+Remark: with the use of the wemos s3 mini, this is not a problem anymore.
 
 
 
