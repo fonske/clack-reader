@@ -2,7 +2,7 @@
 
 ## Lovelace menu
 In order to use the front-end as shown here: 
-![Example](printscreen.jpg)
+![Example](printscreen_EN.jpg)
 
 You will need to install HACS and the following plugins:
 
@@ -11,23 +11,22 @@ You will need to install HACS and the following plugins:
 * bar-card
 * apexcharts  (Bar Charts)
 
-## Automations
-Add the content of [automations.yaml](../automations.yaml) to your current automations file in Home Assistant.
-Next up add the content of [clack.yaml](../clack.yaml) to your current configuration file in Home Assistant.
+## Some automations and sensor
+Add the content of [clack_EN.yaml](../clack_EN.yaml) to your current configuration file in Home Assistant.
 
 ### Custom file location: 
-If you want to keep the files seperate you can include them like so:
+If you want to keep the file seperate from your config file you can include them like so:
 
 ```yml
 homeassistant:
   packages: !include_dir_named packages
 ```
-Now you can create a folder called `packages` in the folder `config` and place the `clack.yaml` there. 
+Now you can create a folder called `packages` in the folder `config` and place the `clack_EN.yaml` there. 
 
 Mare sure to restart HomeAssistant.
 
 ## Configuration
-### Clack_EN.yaml  or Clack_NL.yaml
+### Clack_EN.yaml
 You will need to time your clack head (with a stopwatch) and adjust the times in the `clack_EN.yaml` or `clack_NL.yaml`to the time your clack actually takes per step. 
 
 You can see the status of the steps on the display.
