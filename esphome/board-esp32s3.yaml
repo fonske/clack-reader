@@ -115,3 +115,56 @@ binary_sensor:
             id: clack_l_left
             state: !lambda |-
               return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
+
+button:
+## temporarely test button for testing reg puls
+  - id: clack_use_test_button
+    name: Test button use pulse
+    platform: template
+    on_press:
+      then:
+        - sensor.template.publish:
+            id: clack_watermeter
+            state: !lambda |-
+              return id(totalWaterUsage) += 2;
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
+        - lambda: |-
+            ESP_LOGI("UseTest", "button pressed");
+
+## temporarely test button for testing reg puls
+  - id: clack_reg_test_button
+    name: Test button reg pulse
+    platform: template
+    on_press:
+      then:
+        - globals.set:
+            id: totalWaterUsage
+            value: '00'
+        - text_sensor.template.publish:
+            id: clack_regeneration_last
+            state: !lambda |-
+              char str[32];
+              time_t currTime = id(clack_sntp_time).now().timestamp;
+              strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+              return  { str };
+        - sensor.template.publish:
+            id: clack_watermeter
+            state: !lambda |-
+              return id(totalWaterUsage);
+        - sensor.template.publish:
+            id: clack_m3_left
+            state: !lambda |-
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
+        - sensor.template.publish:
+            id: clack_l_left
+            state: !lambda |-
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
+        - lambda: |-
+            ESP_LOGI("RegTest", "button pressed");
