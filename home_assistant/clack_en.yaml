@@ -1,6 +1,9 @@
 #------------
 #INPUT SELECT
 #------------
+# Remark: The step second backwash, between Brine and Rinse is removed
+# Removing this step reduces the amount of wastewater en is probably not necessary for the performance of the softener
+# This can be setup in the clack menus. See manual.
 input_select:
   water_softener_status:
     name: Water softener status
@@ -15,6 +18,7 @@ input_select:
 #-----------
 #TIMERS
 #-----------
+# Remark: change the timer settings, upon your own timing (measure time with stopwatch on the complet regen. cycle)
 timer:
   timer_ws_backwash:
     name: Backwash
@@ -40,6 +44,7 @@ timer:
     name: Total
 #    duration: '0:05:44'
     duration: '0:00:40'
+
 #-----------
 #SENSORS
 #-----------
@@ -56,39 +61,25 @@ template:
       unique_id: "time_to_regeneration"
       icon: mdi:calendar-clock
 
-## Saltlevel animation picture on dashboard           
-#    - name: "Salt level"
-##      id: salt_level
-#      state: >
-#        {% if states('sensor.clack_procent')|float > 80 %}
-#          softener_100
-#        {% elif states('sensor.clack_procent')|float > 65 and states('sensor.clack_procent')|float <= 80 %}
-#          softener_80
-#        {% elif states('sensor.clack_procent')|float > 40 and states('sensor.clack_procent')|float <= 65 %}
-#          softener_60
-#        {% elif states('sensor.clack_procent')|float > 20 and states('sensor.clack_procent')|float <= 40 %}
-#          softener_40
-#        {% elif states('sensor.clack_procent')|float > 10 and states('sensor.clack_procent')|float <= 20 %}
-#          softener_20
-#        {% elif states('sensor.clack_procent')|float > 5 and states('sensor.clack_procent')|float <= 10 %}
-#          softener_10
-#        {% elif states('sensor.clack_procent')|float > 0 and states('sensor.clack_procent')|float <= 5 %}
-#          softener_0
-#        {% else %}
-#          off
-#        {% endif %}
-          
-# Textsensor "Zout bijvullen" ja of nee after sunrise and before sunset
-#    - name: "Zout bijvullen?"
-#      id: zout_bijvullen
-#      icon: "mdi:basket-fill"
-#      state: >
-#        {% set time = now().strftime('%H:%M') %}
-#        {% if (states('sensor.clack_hoogte')| float < states('number.fill_salt_distance')| float) and ('08:00' < time  < '23:00') %}  
-#          ja
-#       {% else %}
-#          nee
-#        {% endif %}
+#-----------
+#UTILITY METER
+#-----------
+utility_meter:
+  waterusage_this_quarter:  
+    source: sensor.watermeter
+    cycle: quarter-hourly
+  waterusage_this_hour:
+    source: sensor.watermeter
+    cycle: hourly
+  waterusage_today:
+    source: sensor.watermeter
+    cycle: daily 
+  waterusage_this_month:
+    source: sensor.watermeter
+    cycle: monthly
+  watervusage_this_year:
+    source: sensor.watermeter
+    cycle: yearly 
 
 automation:
   ####################################################
@@ -210,3 +201,4 @@ automation:
         entity_id: input_number.water_softener_meter_liters
         value: 0
     initial_state: true
+  ####################################################

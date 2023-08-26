@@ -1,0 +1,228 @@
+views:
+  - title: Ontharder
+    path: ontharder
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - cards:
+              - type: entities
+                entities:
+                  - entity: sensor.watermeter
+                    type: custom:multiple-entity-row
+                    icon: mdi:cup-water
+                    name: Water ontharder
+                    secondary_info:
+                      entity: input_select.water_softener_status
+                      name: 'cyclus: '
+                    state_header: verbr.
+                    entities:
+                      - entity: sensor.tijd_tot_regeneratie
+                        name: nog dag
+                      - entity: sensor.waterontharder_m3_over
+                        name: nog m3
+                style: |
+                  ha-card {
+                    border-radius: 20px
+                  }
+                  .card-header {
+                    font-size: 18px;
+                    padding: 5px 25px;
+                    font-weight: bold;
+                  }          
+                title: Water ontharder
+              - entities:
+                  - entity: sensor.waterontharder_ltr_over
+                    max: 3200
+                    min: 0
+                    name: Ltr gebruikt
+                height: 8px
+                decimal: false
+                positions:
+                  icon: 'off'
+                  indicator: 'off'
+                  tap_action: info
+                  name: 'off'
+                  value: 'off'
+                style: |
+                  ha-card {
+                    border-radius: 20px
+                  }
+                  .card-content {
+                   padding: 0px 10px 10px 10px;
+                   }      
+                type: custom:bar-card
+            mode: vertical
+            type: custom:stack-in-card
+          - type: conditional
+            conditions:
+              - entity: timer.timer_ws_total
+                state_not: idle
+            card:
+              type: entities
+              style: |
+
+                .card-content {
+                  padding: 8px;
+                }
+                .card-content > div {
+                  margin: 0 !important;
+                }  
+                .card-header {
+                  font-size: 18px;
+                  padding: 5px 25px;
+                  font-weight: bold;
+                }  
+                    .card-header {
+                      font-size: 18px;
+                      padding: 5px 25px;
+                      font-weight: bold;
+                    }     
+              title: Regen. gestart
+              entities:
+                - conditions:
+                    - entity: timer.timer_ws_backwash
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_backwash
+                    icon: mdi:numeric-1-circle
+                    name: 'Cyclus: terugspoelen'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_brine
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_brine
+                    icon: mdi:numeric-2-circle
+                    name: 'Cyclus: zoutspoeling'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_rinse
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_rinse
+                    icon: mdi:numeric-4-circle
+                    name: 'Cyclus: snelspoeling'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_fill
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_fill
+                    icon: mdi:numeric-5-circle
+                    name: 'Cyclus: vullen'
+                  type: conditional
+                - type: section
+                - entity: timer.timer_ws_total
+                  icon: mdi:timer-sand
+                  name: Totale tijd over (4 cycles)
+      - type: entities
+        entities:
+          - entity: sensor.watermeter
+          - entity: sensor.waterontharder_ltr_over
+            name: Waterontharder ltr over
+          - entity: sensor.waterontharder_m3_over
+            name: Waterontharder m3 over
+          - entity: sensor.zoutniveau_afstand
+            name: Afstand
+          - entity: sensor.zoutniveau_hoogte
+            name: Hoogte
+          - entity: sensor.zoutniveau_procent
+            name: Procent
+          - entity: sensor.zout_bijvullen
+          - entity: sensor.waterontharder_geregenereerd_op
+          - entity: binary_sensor.watermeter_pulse
+          - entity: binary_sensor.regeneratie_pulse
+          - entity: sensor.salt_level_2
+          - entity: button.test_button_use_pulse
+          - entity: button.test_button_reg_pulse
+      - elements:
+          - entity: sensor.salt_level_2
+            image: local/images/softener.png
+            state_image:
+              '0': local/images/softener0.png
+              '10': local/images/softener10.png
+              '20': local/images/softener20.png
+              '40': local/images/softener40.png
+              '60': local/images/softener60.png
+              '80': local/images/softener80.png
+              '100': local/images/softener100.png
+            style:
+              left: 0%
+              top: 0%
+              transform: scale(1,1)
+            tap_action:
+              action: none
+            type: image
+        image: local/images/softener.png
+        panel: true
+        type: picture-elements
+      - type: entities
+        entities:
+          - entity: sensor.waterverbruik_dit_kwartier
+          - entity: sensor.waterverbruik_dit_uur
+          - entity: sensor.waterverbruik_vandaag
+          - entity: sensor.waterverbruik_maand
+          - entity: sensor.waterverbruik_jaar
+      - type: custom:apexcharts-card
+        graph_span: 7d
+        update_interval: 5m
+        cache: true
+        span:
+          end: day
+          offset: '-1sec'
+        header:
+          show: true
+          title: Water per dag
+        apex_config:
+          xaxis:
+            labels:
+              format: dd-MM
+              show: true
+              showAlways: true
+          yaxis:
+            forceNiceScale: true
+            decimalsInFloat: 0
+            min: 0
+          chart:
+            type: area
+            height: 300
+          stroke:
+            show: true
+            width: 1
+          legend:
+            show: true
+          dataLabels:
+            enabled: false
+            distributed: true
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.25
+              opacityTo: 1
+              inverseColors: true
+              stops:
+                - 0
+                - 90
+                - 100
+        series:
+          - entity: sensor.waterverbruik_vandaag
+            name: Verbruik
+            type: column
+            float_precision: 2
+            group_by:
+              func: max
+              duration: 23h59m59s
+      - type: entities
+        entities:
+          - entity: number.min_afstand_zout
+          - entity: number.max_afstand_zout
+          - entity: number.zout_bijvullen_afstand
+          - entity: number.capaciteit_in_dagen
+          - entity: number.capaciteit_in_liters
+          - entity: sensor.versie
+          - entity: sensor.waterontharder_ip
+          - entity: sensor.wifi_signal
+          - entity: sensor.wifi_signal_db
+        title: Instellingen
