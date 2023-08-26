@@ -1,0 +1,231 @@
+views:
+  - title: Watersoftener
+    path: watersoftener
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - cards:
+              - type: entities
+                entities:
+                  - entity: sensor.watermeter
+                    type: custom:multiple-entity-row
+                    icon: mdi:cup-water
+                    name: Water softener
+                    secondary_info:
+                      entity: input_select.water_softener_status
+                      name: 'cycle: '
+                    state_header: used
+                    entities:
+                      - entity: sensor.time_to_regeneration
+                        name: time left
+                      - entity: sensor.watersoftener_m3_left
+                        name: m3 left
+                style: |
+                  ha-card {
+                    border-radius: 20px
+                  }
+                  .card-header {
+                    font-size: 18px;
+                    padding: 5px 25px;
+                    font-weight: bold;
+                  }          
+                title: Water softener
+              - entities:
+                  - entity: sensor.watersoftener_ltr_left
+                    max: 3200
+                    min: 0
+                    name: Ltr used
+                height: 8px
+                decimal: false
+                positions:
+                  icon: 'off'
+                  indicator: 'off'
+                  tap_action: info
+                  name: 'off'
+                  value: 'off'
+                style: |
+                  ha-card {
+                    border-radius: 20px
+                  }
+                  .card-content {
+                   padding: 0px 10px 10px 10px;
+                   }      
+                type: custom:bar-card
+            mode: vertical
+            type: custom:stack-in-card
+          - type: conditional
+            conditions:
+              - entity: timer.timer_ws_total
+                state_not: idle
+            card:
+              type: entities
+              style: |
+
+                .card-content {
+                  padding: 8px;
+                }
+                .card-content > div {
+                  margin: 0 !important;
+                }  
+                .card-header {
+                  font-size: 18px;
+                  padding: 5px 25px;
+                  font-weight: bold;
+                }  
+                    .card-header {
+                      font-size: 18px;
+                      padding: 5px 25px;
+                      font-weight: bold;
+                    }     
+              title: Regen. started
+              entities:
+                - conditions:
+                    - entity: timer.timer_ws_backwash
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_backwash
+                    icon: mdi:numeric-1-circle
+                    name: 'Cycle: Backwash'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_brine
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_brine
+                    icon: mdi:numeric-2-circle
+                    name: 'Cycle: Brine'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_rinse
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_rinse
+                    icon: mdi:numeric-3-circle
+                    name: 'Cycle: Rinse'
+                  type: conditional
+                - conditions:
+                    - entity: timer.timer_ws_fill
+                      state_not: idle
+                  row:
+                    entity: timer.timer_ws_fill
+                    icon: mdi:numeric-4-circle
+                    name: 'Cycle: Fill'
+                  type: conditional
+                - type: section
+                - entity: timer.timer_ws_total
+                  icon: mdi:timer-sand
+                  name: Total time left (4 cycles)
+      - type: entities
+        entities:
+          - entity: sensor.watermeter
+          - entity: sensor.watersoftener_ltr_left
+          - entity: sensor.watersoftener_m3_left
+          - entity: sensor.saltlevel_distance
+            name: Distance
+          - entity: sensor.saltlevel_height
+            name: Height
+          - entity: sensor.saltlevel_procent
+            name: Procent
+          - entity: sensor.fill_salt
+          - entity: sensor.watersoftener_generated_on
+          - entity: binary_sensor.watermeter_pulse
+          - entity: binary_sensor.regeneration_pulse
+          - entity: sensor.salt_level
+          - entity: button.test_button_use_pulse
+          - entity: button.test_button_reg_pulse
+      - elements:
+          - entity: sensor.salt_level
+            image: local/images/softener.png
+            state_image:
+              '0': local/images/softener0.png
+              '10': local/images/softener10.png
+              '20': local/images/softener20.png
+              '40': local/images/softener40.png
+              '60': local/images/softener60.png
+              '80': local/images/softener80.png
+              '100': local/images/softener100.png
+            style:
+              left: 0%
+              top: 0%
+              transform: scale(1,1)
+            tap_action:
+              action: none
+            type: image
+        image: local/images/softener.png
+        panel: true
+        type: picture-elements
+      - type: entities
+        entities:
+          - entity: sensor.waterusage_this_quarter
+            name: Waterusage last quarter
+          - entity: sensor.waterusage_this_hour
+            name: Waterusage last hour
+          - entity: sensor.waterusage_today
+            name: Waterusage today
+          - entity: sensor.waterusage_this_month
+            name: Waterusage this month
+          - entity: sensor.watervusage_this_year
+            name: Waterusage this year
+      - type: custom:apexcharts-card
+        graph_span: 7d
+        update_interval: 5m
+        cache: true
+        span:
+          end: day
+          offset: '-1sec'
+        header:
+          show: true
+          title: Water per day
+        apex_config:
+          xaxis:
+            labels:
+              format: dd-MM
+              show: true
+              showAlways: true
+          yaxis:
+            forceNiceScale: true
+            decimalsInFloat: 0
+            min: 0
+          chart:
+            type: area
+            height: 300
+          stroke:
+            show: true
+            width: 1
+          legend:
+            show: true
+          dataLabels:
+            enabled: false
+            distributed: true
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.25
+              opacityTo: 1
+              inverseColors: true
+              stops:
+                - 0
+                - 90
+                - 100
+        series:
+          - entity: sensor.waterusage_today
+            name: Usage
+            type: column
+            float_precision: 2
+            group_by:
+              func: max
+              duration: 23h59m59s
+      - type: entities
+        entities:
+          - entity: number.min_distance_salt
+          - entity: number.max_distance_salt
+          - entity: number.fill_salt_distance
+          - entity: number.capacity_in_days
+          - entity: number.capacity_in_liters
+          - entity: sensor.version
+          - entity: sensor.watersoftener_ip
+          - entity: sensor.wifi_signal
+          - entity: sensor.wifi_signal_db
+        title: Settings
