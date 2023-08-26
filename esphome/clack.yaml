@@ -6,7 +6,7 @@ substitutions:
 # In order to use other language or a different ESP chip, fix include file name below:
 # Currently supported languages are en, nl. 
 # ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7,
-# esp32-wemos-s3 is a wemos S3 mini
+# ESP32-wemos-s3 is a wemos S3 mini
 
 packages:
   remote_package:
@@ -17,13 +17,17 @@ packages:
       # - esphome/.clack-labels-nl.yaml
       # - esphome/board-esp32.yaml
       # - esphome/board-esp32s3.yaml
-      # - esphome/board-esp32-wemos-s3.yaml
-      - esphome/board-esp8266.yaml
+      - esphome/board-esp32-wemos-s3.yaml
+      # - esphome/board-esp8266.yaml
 
 esphome:
   name: ${name}
   includes:
     - distance-sensor2.h
+  on_boot:
+    priority: 200
+    then:
+      - script.execute: on_boot
 
 # Enable Home Assistant API
 api:
@@ -55,12 +59,22 @@ wifi:
     password: "configesp"
     ap_timeout: 15s
 
+script:
+###  On reboot or powerloss of the esp, set the time left counter
+  - id: on_boot
+    then:
+      - text_sensor.template.publish:
+          id: clack_regeneration_last
+          state: !lambda |-
+            char str[32];
+            time_t currTime = id(clack_sntp_time).now().timestamp;
+            strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+            return  { str };
+
 globals:
   - id: totalWaterUsage
     type: float
-# ⬇ Bij het updaten onder de waarde, verander dit in no voor 1 run  ⬇ # 
-    restore_value: yes     
-# ⬇ Bij het flashen,pas dit aan! ⬇ #        
+    restore_value: yes          
     initial_value: '00' 
 
 #-----------
@@ -119,7 +133,25 @@ sensor:
         if (x >= 100) return 100.0;
         else if (x <= 0.0) return 0.0;
         else return x;
-    
+
+  # Saltlevel animation picture on dashboard  
+  - platform: copy
+    source_id: clack_procent
+    id: clack_salt_level
+    name: "Salt level"
+    filters:
+    - lambda: |-
+        if (x >= 80) return 100;
+        else if (x >= 65 && x <= 79) return 80;
+        else if (x >= 40 && x <= 64) return 60;   
+        else if (x >= 20 && x <= 39) return 40;
+        else if (x >= 10 && x <= 19) return 20;
+        else if (x >= 5 && x <= 9) return 10;
+        else if (x >= 1 && x <= 4) return 5;
+        else if (x <= 0.0) return 0;
+        else return x;
+
+          
   # ultrasonic distance sensor calculate salt level from bottom
   - platform: template
     id: clack_height
@@ -141,7 +173,7 @@ sensor:
 
 #  Watermeter  
   - platform: template
-    id: clack_watermeter_total
+    id: clack_watermeter
     name: ${clack_watermeter_total}
     state_class: "total_increasing"
     icon: mdi:water
@@ -312,18 +344,17 @@ number:
     on_value:
       then:
         - sensor.template.publish:
-            id: clack_watermeter_total
+            id: clack_watermeter
             state: !lambda |-
               return id(totalWaterUsage);
         - sensor.template.publish:
             id: clack_m3_left
             state: !lambda |-
-              return float(id(clack_capacity_liters).state - id(clack_watermeter_total).state) * 0.001;
-#              return id(water_softener_m3_left).state;
+              return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
-              return int(id(clack_capacity_liters).state - id(clack_watermeter_total).state);
+              return int(id(clack_capacity_liters).state - id(clack_watermeter).state);
   
     ## Set capacity days  
   - platform: template
