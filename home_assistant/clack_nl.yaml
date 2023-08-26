@@ -1,65 +1,92 @@
 #------------
 #INPUT SELECT
 #------------
+# Opm: de stap 2e terugspoeling (backwash) is eruit gehaald, tussen zoutspoeling en snelspoeling.
+# Deze stap weghalen bespaart water en is mogelijk niet persee nodig. Dit kan ingesteld worden in de Clack
 input_select:
   water_softener_status:
     name: Water softener status
     options:
-      - Terug spoeling
-      - Zout spoeling
-      - Snelle spoeling
-      - Vullen
-      - In werking
-    initial: In werking
+      - terugspoeling
+      - zoutspoeling
+      - snelspoeling
+      - vullen
+      - standby
+    initial: standby
     
 #-----------
-#TIMERS
+#TIMERS       
 #-----------
+# Opm: verander deze naar de eigen tijdsduur van de waterontharder (stopwatch)
 timer:
   timer_ws_backwash:
-    name: Backwash
-#    duration: '0:00:57'
+    name: terugspoeling
+#    duration: '0:00:57'  
     duration: '0:00:10'
 
   timer_ws_brine:
-    name: Brine
+    name: zoutspoeling
 #    duration: '0:01:07'
     duration: '0:00:10'
 
   timer_ws_rinse:
-    name: Rinse
+    name: snelspoeling
 #    duration: '0:01:14'
     duration: '0:00:10'
 
   timer_ws_fill:
-    name: Fill
+    name: vullen
 #    duration: '0:01:10'
     duration: '0:00:10'
 
   timer_ws_total:  #sum of all above values
-    name: Total
+    name: total
 #    duration: '0:05:44'
     duration: '0:00:40'
+
 #-----------
 #SENSORS
 #-----------
 template:
   sensor:
-    - name: "time_to_regeneration" # custom sensor die het aantal dagen berekend totdat opnieuw een regeneratie van de waterontharder moet plaatsvinden
+    - name: "tijd_tot_regeneratie" # custom sensor die het aantal dagen berekend totdat opnieuw een regeneratie van de waterontharder moet plaatsvinden
       state: >
-        {%- set time = (states('number.capacity_in_days') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.watersoftener_generated_on')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
+        {%- set time = (states('number.capaciteit_in_dagen') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.waterontharder_geregenereerd_op')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
         {%- set hours = ((time % 86400) // 3600) %}
         {%- set hours = '{}h '.format(hours) if hours > 0 else '' %}
         {%- set days = (time // 86400) %}
         {%- set days = '{}d '.format(days) if days > 0 else '' %}
         {{days + hours}}
-      unique_id: "time_to_regeneration"
+      unique_id: "tijd_tot_regeneratie"
       icon: mdi:calendar-clock
 
+#-----------
+#UTILITY METER
+#-----------
+utility_meter:
+  waterverbruik_dit_kwartier:  
+    source: sensor.watermeter
+    cycle: quarter-hourly
+  waterverbruik_dit_uur:
+    source: sensor.watermeter
+    cycle: hourly
+  waterverbruik_vandaag:
+    source: sensor.watermeter
+    cycle: daily 
+  waterverbruik_maand:
+    source: sensor.watermeter
+    cycle: monthly
+  waterverbruik_jaar:
+    source: sensor.watermeter
+    cycle: yearly 
+
+#-----------
+#AUTOMATIONS
+#-----------
 automation:
   ####################################################
   - id: set_water_softener_start_backwash
-    alias: Set water softener start Backwash
+    alias: Set water softener start backwash
     trigger:
 #    - platform: state
 #      entity_id:
@@ -72,12 +99,12 @@ automation:
       conditions:
       - condition: state
         entity_id: input_select.water_softener_status
-        state: Idle
+        state: standby
     action:
     - service: input_select.select_option
       data:
         entity_id: input_select.water_softener_status
-        option: Backwash
+        option: terugspoeling
     - service: timer.start
       entity_id: timer.timer_ws_backwash
     - service: timer.start
@@ -85,7 +112,7 @@ automation:
     initial_state: true
   ####################################################
   - id: set_water_softener_start_brine
-    alias: Set water softener start Brine
+    alias: Set water softener start brine
     trigger:
     - platform: event
       event_type: timer.finished
@@ -96,18 +123,18 @@ automation:
       conditions:
       - condition: state
         entity_id: input_select.water_softener_status
-        state: Backwash
+        state: terugspoeling
     action:
     - service: input_select.select_option
       data:
         entity_id: input_select.water_softener_status
-        option: Brine
+        option: zoutspoeling
     - service: timer.start
       entity_id: timer.timer_ws_brine
     initial_state: true
   ####################################################
   - id: set_water_softener_start_rinse
-    alias: Set water softener start Rinse
+    alias: Set water softener start rinse
     trigger:
     - platform: event
       event_type: timer.finished
@@ -118,18 +145,18 @@ automation:
       conditions:
       - condition: state
         entity_id: input_select.water_softener_status
-        state: Brine
+        state: zoutspoeling
     action:
     - service: input_select.select_option
       data:
         entity_id: input_select.water_softener_status
-        option: Rinse
+        option: snelspoeling
     - service: timer.start
       entity_id: timer.timer_ws_rinse
     initial_state: true
   ####################################################
   - id: set_water_softener_start_fill
-    alias: Set water softener start Fill
+    alias: Set water softener start fill
     trigger:
     - platform: event
       event_type: timer.finished
@@ -140,12 +167,12 @@ automation:
       conditions:
       - condition: state
         entity_id: input_select.water_softener_status
-        state: Rinse
+        state: snelspoeling
     action:
     - service: input_select.select_option
       data:
         entity_id: input_select.water_softener_status
-        option: Fill
+        option: vullen
     - service: timer.start
       entity_id: timer.timer_ws_fill
     initial_state: true
@@ -162,12 +189,12 @@ automation:
       conditions:
       - condition: state
         entity_id: input_select.water_softener_status
-        state: Fill
+        state: vullen
     action:
     - service: input_select.select_option
       data:
         entity_id: input_select.water_softener_status
-        option: Idle
+        option: standby
     - service: esphome.clack_meterstand_clack
       data:
         meter_value: 0
@@ -176,3 +203,4 @@ automation:
         entity_id: input_number.water_softener_meter_liters
         value: 0
     initial_state: true
+  ####################################################
