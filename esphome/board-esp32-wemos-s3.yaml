@@ -62,7 +62,7 @@ web_server:
 binary_sensor:
   - platform: gpio
     pin:
-      number: 16 # lilygo ESP32S3 T7-S3: 12-1, mh-et-live: 16, wemos d1 mini -D4
+      number: 16 # wemos s3 mini: 16, lilygo ESP32S3 T7-S3: 12-1, mh-et-live: 16, wemos d1 mini -D4
       inverted: true
       mode:
         input: true
@@ -90,7 +90,7 @@ binary_sensor:
   ## regeneration pulse / relay 2
   - platform: gpio
     pin:
-      number: 12 # lilygo ESP32S3 T7-S3: 18, mh-et-live: 18, wemos d1 mini -D5
+      number: 12 # wemos s3 mini: 12, lilygo ESP32S3 T7-S3: 18, mh-et-live: 18, wemos d1 mini -D5
       inverted: true
       mode:
         input: true
