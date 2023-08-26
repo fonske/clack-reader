@@ -12,7 +12,7 @@ You will need to install HACS and the following plugins:
 * apexcharts  (Bar Charts)
 
 ## automations and sensor
-Add the content of [clack.yaml](../clack.yaml) to your current configuration file in Home Assistant.
+Add the content of [clack_en.yaml](../clack_en.yaml) to your current configuration file in Home Assistant.
 Or better:
 
 ### Custom file location: 
@@ -22,13 +22,13 @@ If you want to keep the file seperate from your config file you can include them
 homeassistant:
   packages: !include_dir_named packages
 ```
-Now you can create a folder called `packages` in the folder `config` and place the `clack.yaml` there. 
+Now you can create a folder called `packages` in the folder `config` and place the `clack_en.yaml` there. 
 
-Mare sure to restart HomeAssistant.
+Make sure to restart HomeAssistant.
 
 ## Configuration
-### Clack.yaml
-You will need to time your clack head (with a stopwatch) and adjust the times in the `clack.yaml` to the time your clack actually takes per step. 
+### clack_en.yaml
+You will need to time your clack head (with a stopwatch) and adjust the times in the `clack_EN.yaml` to the time your clack actually takes per step. 
 
 You can see the status of the steps on the display.
 
@@ -67,7 +67,7 @@ To be able to close the Clack reader the Circuitboard will point slightly inward
 
 The ESP might come loose when attempting to close the clack head.
 
-Remark: with the use of the wemos s3 mini, this is not a problem anymore.
+Update: with the use of the smaller wemos s3 mini, this is not a problem anymore.
 
 
 
