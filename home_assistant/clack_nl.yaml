@@ -88,10 +88,10 @@ automation:
   - id: set_water_softener_start_backwash
     alias: Set water softener start backwash
     trigger:
-#    - platform: state
-#      entity_id:
-#      - binary_sensor.regeneratie_pulse
-#      to: 'on'
+    - platform: state
+      entity_id:
+      - binary_sensor.regeneratie_pulse
+      to: 'on'
     - platform: state
       entity_id: button.test_button_reg_pulse
     condition:
