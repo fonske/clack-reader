@@ -13,9 +13,9 @@ uart:
   rx_pin: 36  #SCL
   baud_rate: 9600
 
-status_led:
-  pin:
-    number: 47
+#status_led:
+#  pin:
+#    number: 47
 
 # get rid of CDC error
 esphome:
@@ -57,6 +57,23 @@ captive_portal:
 # Enable Web server.
 web_server:
   port: 80
+
+light:
+  - platform: neopixelbus
+    type: GRB
+    variant: 800KBPS
+    pin: 47
+    num_leds: 1
+    name: Led
+    icon: mdi:led-outline
+    id: esp32s3_rgb_led
+    entity_category: config
+    restore_mode: ALWAYS_OFF
+    internal: true
+    default_transition_length: 500ms
+    method:
+      type: esp32_rmt
+      channel: 0              
 
 ## watermeter pulse / relay 1
 binary_sensor:
