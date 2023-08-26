@@ -120,7 +120,6 @@ binary_sensor:
             id: clack_m3_left
             state: !lambda |-
               return float(id(clack_capacity_liters).state - id(clack_watermeter).state) * 0.001;
-#              return id(water_softener_m3_left).state;
         - sensor.template.publish:
             id: clack_l_left
             state: !lambda |-
