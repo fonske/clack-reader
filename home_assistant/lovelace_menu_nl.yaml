@@ -133,7 +133,7 @@ views:
           - entity: sensor.waterontharder_geregenereerd_op
           - entity: binary_sensor.watermeter_pulse
           - entity: binary_sensor.regeneratie_pulse
-          - entity: sensor.salt_level_2
+          - entity: sensor.salt_level
           - entity: button.test_button_use_pulse
           - entity: button.test_button_reg_pulse
       - elements:
