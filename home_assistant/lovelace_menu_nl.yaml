@@ -137,7 +137,7 @@ views:
           - entity: button.test_button_use_pulse
           - entity: button.test_button_reg_pulse
       - elements:
-          - entity: sensor.salt_level_2
+          - entity: sensor.salt_level
             image: local/images/softener.png
             state_image:
               '0': local/images/softener0.png
