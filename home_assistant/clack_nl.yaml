@@ -51,7 +51,7 @@ template:
   sensor:
     - name: "tijd_tot_regeneratie" # custom sensor die het aantal dagen berekend totdat opnieuw een regeneratie van de waterontharder moet plaatsvinden
       state: >
-        {%- set time = (states('number.capaciteit_in_dagen') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.waterontharder_geregenereerd_op')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
+        {%- set time = (states('number.capaciteit_in_dagen') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.waterontharder_geregenereerd_op')[3:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
         {%- set hours = ((time % 86400) // 3600) %}
         {%- set hours = '{}h '.format(hours) if hours > 0 else '' %}
         {%- set days = (time // 86400) %}
