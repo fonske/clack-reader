@@ -1,0 +1,54 @@
+substitutions:
+  clack_distance: Zoutniveau afstand
+  clack_procent: Zoutniveau procent
+  clack_height: Zoutniveau hoogte
+  clack_watermeter_total: Watermeter
+  clack_m3_left: Waterontharder m3 over
+  clack_l_left: Waterontharder ltr over
+  clack_version: Versie
+  clack_regeneration_last: Waterontharder geregenereerd op
+  clack_fill_salt: Zout bijvullen
+  clack_saltlevel_height_min: Min afstand zout
+  clack_saltlevel_height_max: Max afstand zout
+  clack_saltlevel_height_fill: Zout bijvullen afstand
+  clack_capacity_liters: Capaciteit in liters
+  clack_capacity_days: Capaciteit in dagen
+  clack_watermeter_pulse: Watermeter pulse
+  clack_regeneration_pulse: Regeneratie pulse
+  clack_ip: Waterontharder IP
+  clack_wifi_signal_db: WiFi Signaal dB
+  clack_wifi_signal_db_percent: WiFi Signaal
+  clack_uptime: Uptime
+  hours: uur
+  days: dagen
+  clack_yes: ja
+  clack_no: nee
+
+text_sensor:
+  # Expose last regeneration information as sensor
+  - platform: template
+    name: ${clack_regeneration_last}
+    id: clack_regeneration_last
+    icon: mdi:clock-start
+    update_interval: never
+    filters:   
+      - substitute:
+        - "Jan -> jan"
+        - "Feb -> feb"
+        - "Mar -> mar"
+        - "Apr -> apr"
+        - "Mai -> mei"
+        - "Jun -> jun"
+        - "Jul -> jul"
+        - "Aug -> aug"
+        - "Sep -> sep"
+        - "Okt -> okt"
+        - "Nov -> nov"
+        - "Dec -> dec"
+        - "Mon -> ma"
+        - "Tue -> di"
+        - "Wed -> wo"
+        - "Thu -> do"
+        - "Fri -> vr"
+        - "Sat -> zat"
+        - "Sun -> zon" 

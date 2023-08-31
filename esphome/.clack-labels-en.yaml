@@ -1,0 +1,33 @@
+substitutions:
+  clack_distance: Saltlevel distance
+  clack_procent: Saltlevel procent
+  clack_height: Saltlevel height
+  clack_watermeter_total: Watermeter
+  clack_m3_left: Watersoftener m3 left
+  clack_l_left: Watersoftener ltr left
+  clack_version: Version
+  clack_regeneration_last: Watersoftener generated on
+  clack_fill_salt: Fill salt
+  clack_saltlevel_height_min: Min distance salt
+  clack_saltlevel_height_max: Max distance salt
+  clack_saltlevel_height_fill: Fill salt distance
+  clack_capacity_liters: Capacity in liters
+  clack_capacity_days: Capacity in days
+  clack_watermeter_pulse: Watermeter pulse
+  clack_regeneration_pulse: Regeneration pulse
+  clack_ip: Watersoftener IP
+  clack_wifi_signal_db: WiFi Signal dB
+  clack_wifi_signal_db_percent: WiFi Signal
+  clack_uptime: Uptime
+  hours: hours
+  days: days
+  clack_yes: "yes"
+  clack_no: "no"
+
+text_sensor:
+  # Expose last regeneration information as sensor / already in English
+  - platform: template
+    name: ${clack_regeneration_last}
+    id: clack_regeneration_last
+    icon: mdi:clock-start
+    update_interval: never
