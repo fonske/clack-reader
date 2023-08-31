@@ -1,0 +1,286 @@
+substitutions:
+  name: salt-level
+  device_description: "Esphome component for Clack WS1 softener with ultrasonic sensor saltlevel detection"
+  timezone: "Europe/Amsterdam"  
+
+# In order to use other language or a different ESP chip, fix include file name below:
+# Currently supported languages are en, nl. 
+# ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7,
+# ESP32-wemos-s3 is a wemos S3 mini
+
+packages:
+  remote_package:
+    url: https://github.com/fonske/Salt-level-ultrasonic
+    ref: main
+    files: 
+      - esphome/.salt-level-labels-en.yaml
+      # - esphome/.salt-level-labels-nl.yaml
+      - esphome/board-esp32-wemos-s3.yaml
+      # - esphome/board-esp8266.yaml
+
+esphome:
+  name: ${name}
+  includes:
+    - distance-sensor2.h
+#  on_boot:
+#    priority: 200
+#    then:
+#      - script.execute: on_boot
+
+# Enable Home Assistant API
+api:
+  reboot_timeout: 0s
+
+time:
+  - platform: sntp
+    id: salt_level_sntp_time
+    timezone: ${timezone}
+
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${name} hotspot"
+    password: "configesp"
+    ap_timeout: 15s
+
+script:
+###  On reboot or powerloss of the esp, set the time left counter
+#  - id: on_boot
+#    then:
+#      - text_sensor.template.publish:
+#          id: salt_level_regeneration_last
+#          state: !lambda |-
+#            char str[32];
+#            time_t currTime = id(salt_level_sntp_time).now().timestamp;
+#            strftime(str, sizeof(str), "%a %d %b %H:%M", localtime(&currTime));
+#            return  { str };
+
+#globals:
+#  - id: totalWaterUsage
+#    type: float
+#    restore_value: yes          
+#    initial_value: '00' 
+
+#-----------
+#SENSORS
+#-----------
+sensor:
+  # ultrasonic distance sensor.
+  - platform: custom
+    lambda: |-
+      auto height_sensor = new DistanceSensor(150, id(uart_bus));
+      App.register_component(height_sensor);
+      return {height_sensor};
+    sensors:
+      name: ${salt_level_distance}
+      id:  salt_level_distance
+      unit_of_measurement: "cm"
+      accuracy_decimals: 1
+      icon: "mdi:arrow-expand-vertical" 
+      filters:
+      - throttle: 5s
+      - filter_out: nan
+      - delta: 0.5
+      on_value:
+        then:
+          - sensor.template.publish:
+              id: salt_level_procent
+              state: !lambda |-
+                const float max_distance = id(salt_level_height_max).state; // heigt in cm to lowest level
+                const float min_distance = id(salt_level_height_min).state; // height in cm to highest level
+                return int((1-((id(salt_level_distance).state - min_distance)/max_distance))*100);
+          - sensor.template.publish:
+              id: salt_level_height
+              state: !lambda |-
+                const float max_distance = id(salt_level_height_max).state;  // height in cm to lowest level
+                return max_distance-id(salt_level_distance).state;
+          - text_sensor.template.publish:
+              id: salt_level_fill_salt
+              state: !lambda |-
+                if (id(salt_level_height).state < id(salt_level_height_fill).state) {
+                  return {"${salt_level_yes}"};
+                } else {
+                  return {"${salt_level_no}"};
+                }
+    
+      
+  # ultrasonic distance sensor calculate tank_percentage
+  - platform: template
+    id: salt_level_procent
+    name: ${salt_level_procent}
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:percent-box-outline" 
+    update_interval: 600s
+    filters:
+    - lambda: |-
+        if (x >= 100) return 100.0;
+        else if (x <= 0.0) return 0.0;
+        else return x;
+
+  # Saltlevel animation picture on dashboard  
+  - platform: copy
+    source_id: salt_level_procent
+    id: salt_level_salt_level
+    name: "Salt level"
+    filters:
+    - lambda: |-
+        if (x >= 80) return 100;
+        else if (x >= 65 && x <= 79) return 80;
+        else if (x >= 40 && x <= 64) return 60;   
+        else if (x >= 20 && x <= 39) return 40;
+        else if (x >= 10 && x <= 19) return 20;
+        else if (x >= 5 && x <= 9) return 10;
+        else if (x <= 4) return 0;
+        else return x;
+
+          
+  # ultrasonic distance sensor calculate salt level from bottom
+  - platform: template
+    id: salt_level_height
+    name: ${salt_level_height}
+    unit_of_measurement: "cm"
+    accuracy_decimals: 1
+    icon: "mdi:hydraulic-oil-level" 
+    update_interval: 600s
+    filters:
+    - lambda: |-
+        if (x >= 100) return 100.0;
+        else if (x <= 0.0) return 0.0;
+        else return x;
+
+# Diagnostics wifi and uptime      
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    id: salt_level_wifi_signal_db
+    name: "WiFi Signal dB"
+    update_interval: 60s
+    entity_category: diagnostic
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: salt_level_wifi_signal_db
+    id: salt_level_wifi_signal_db_percent
+    name: "WiFi Signal"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "%"
+    entity_category: diagnostic
+
+  - platform: uptime
+    id: salt_level_uptime
+    name: ${salt_level_uptime}
+    unit_of_measurement: ${days}
+    update_interval: 3600s
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.000011574
+
+# Text sensors with general information.
+text_sensor:
+  # Expose ESPHome version as sensor.
+  - platform: version
+    id: salt_level_version
+    name: ${salt_level_version}
+    hide_timestamp: true
+
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${salt_level_ip}
+      icon: mdi:ip-network
+
+  # Textsensor "Fill Salt" yes or no.
+  - platform: template
+    name: ${salt_level_fill_salt}
+    id: salt_level_fill_salt
+    icon: mdi:basket-fill
+    update_interval: never
+
+# imput numbers as boxes for setting the dimensions of the tank and level alarm.
+number:
+    ## Set minimum distance (from bottom sensor / underneath plastic cap)
+  - platform: template
+    id: salt_level_height_min
+    name: ${salt_level_height_min}
+    icon: mdi:toggle-switch-variant
+    optimistic: true
+    mode: slider
+    step: 0.5
+    entity_category: config
+    min_value: 0
+    max_value: 10
+    initial_value: 0
+    restore_value: yes
+    unit_of_measurement: "cm"
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: salt_level_procent
+            state: !lambda |-
+              const float max_distance = id(salt_level_height_max).state; // heigt in cm to lowest level
+              const float min_distance = id(salt_level_height_min).state; // height in cm to highest level
+              return int((1-((id(salt_level_distance).state - min_distance)/max_distance))*100);
+        - sensor.template.publish:
+            id: salt_level_height
+            state: !lambda |-
+              const float max_distance = id(salt_level_height_max).state;  // height in cm to lowest level
+              return max_distance-id(salt_level_distance).state; 
+
+    ## Set maximum distance (from bottom sensor / underneath plastic cap) to water level (to measure in pipe?)
+  - platform: template
+    id: salt_level_height_max
+    name: ${salt_level_height_max}
+    icon: mdi:toggle-switch-variant-off
+    optimistic: true
+    mode: slider
+    step: 0.5
+    entity_category: config
+    min_value: 0
+    max_value: 100
+    initial_value: 30
+    restore_value: yes
+    unit_of_measurement: "cm"
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: salt_level_procent
+            state: !lambda |-
+              const float max_distance = id(salt_level_height_max).state; // heigt in cm to lowest level
+              const float min_distance = id(salt_level_height_min).state; // height in cm to highest level
+              return int((1-((id(salt_level_distance).state - min_distance)/max_distance))*100);
+        - sensor.template.publish:
+            id: salt_level_height
+            state: !lambda |-
+              const float max_distance = id(salt_level_height_max).state;  // height in cm to lowest level
+              return max_distance-id(salt_level_distance).state;
+
+    ## Set alarm level
+  - platform: template
+    id: salt_level_height_fill
+    name: ${salt_level_height_fill}
+    icon: mdi:hydraulic-oil-temperature
+    optimistic: true
+    mode: slider
+    step: 0.1
+    entity_category: config
+    min_value: 0
+    max_value: 10
+    initial_value: 1.5
+    restore_value: yes
+    unit_of_measurement: ""
+    update_interval: 600s
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: salt_level_fill_salt
+            state: !lambda |-
+              if (id(salt_level_height).state < id(salt_level_height_fill).state) {
+                return {"${salt_level_yes}"};
+              } else {
+                return {"${salt_level_no}"};
+              }

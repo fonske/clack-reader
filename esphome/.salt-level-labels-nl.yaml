@@ -1,0 +1,47 @@
+substitutions:
+  salt_level_distance: Zoutniveau afstand
+  salt_level_procent: Zoutniveau procent
+  salt_level_height: Zoutniveau hoogte
+  salt_level_version: Versie
+  salt_level_regeneration_last: Waterontharder geregenereerd op
+  salt_level_fill_salt: Zout bijvullen
+  salt_level_height_min: Min afstand zout
+  salt_level_height_max: Max afstand zout
+  salt_level_height_fill: Zout bijvullen afstand
+  salt_level_ip: Zoutniveau IP
+  salt_level_wifi_signal_db: WiFi Signaal dB
+  salt_level_wifi_signal_db_percent: WiFi Signaal
+  salt_level_uptime: Uptime
+  hours: uur
+  days: dagen
+  salt_level_yes: ja
+  salt_level_no: nee
+
+text_sensor:
+  # Expose last regeneration information as sensor
+  - platform: template
+    name: ${salt_level_regeneration_last}
+    id: salt_level_regeneration_last
+    icon: mdi:clock-start
+    update_interval: never
+    filters:   
+      - substitute:
+        - "Jan -> jan"
+        - "Feb -> feb"
+        - "Mar -> mar"
+        - "Apr -> apr"
+        - "Mai -> mei"
+        - "Jun -> jun"
+        - "Jul -> jul"
+        - "Aug -> aug"
+        - "Sep -> sep"
+        - "Okt -> okt"
+        - "Nov -> nov"
+        - "Dec -> dec"
+        - "Mon -> ma"
+        - "Tue -> di"
+        - "Wed -> wo"
+        - "Thu -> do"
+        - "Fri -> vr"
+        - "Sat -> zat"
+        - "Sun -> zon" 
