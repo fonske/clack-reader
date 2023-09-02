@@ -1,15 +1,204 @@
+#------------
+#INPUT SELECT
+#------------
+# Remark: The step second backwash, between Brine and Rinse is removed
+# Removing this step reduces the amount of wastewater en is probably not necessary for the performance of the softener
+# This can be setup in the clack menus. See manual.
+input_select:
+  water_softener_status:
+    name: Water softener status
+    options:
+      - Backwash
+      - Brine
+      - Rinse
+      - Fill
+      - Idle
+    initial: Idle
+    
+#-----------
+#TIMERS
+#-----------
+# Remark: change the timer settings, upon your own timing (measure time with stopwatch on the complet regen. cycle)
+timer:
+  timer_ws_backwash:
+    name: Backwash
+#    duration: '0:00:57'
+    duration: '0:00:10'
+
+  timer_ws_brine:
+    name: Brine
+#    duration: '0:01:07'
+    duration: '0:00:10'
+
+  timer_ws_rinse:
+    name: Rinse
+#    duration: '0:01:14'
+    duration: '0:00:10'
+
+  timer_ws_fill:
+    name: Fill
+#    duration: '0:01:10'
+    duration: '0:00:10'
+
+  timer_ws_total:  #sum of all above values
+    name: Total
+#    duration: '0:05:44'
+    duration: '0:00:40'
+
 #-----------
 #SENSORS
 #-----------
 template:
   sensor:
-    - name: "time_from_fill" # custom sensor die het aantal dagen berekend totdat opnieuw een regeneratie van de waterontharder moet plaatsvinden
+    - name: "time_to_regeneration" # custom sensor die het aantal dagen berekend totdat opnieuw een regeneratie van de waterontharder moet plaatsvinden
       state: >
-        {%- set time = (states('number.capacity_in_days') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.watersoftener_generated_on')[3:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
+        {%- set time = (states('number.capacity_in_days') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.watersoftener_generated_on')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
         {%- set hours = ((time % 86400) // 3600) %}
         {%- set hours = '{}h '.format(hours) if hours > 0 else '' %}
         {%- set days = (time // 86400) %}
         {%- set days = '{}d '.format(days) if days > 0 else '' %}
         {{days + hours}}
-      unique_id: "time_from_fill"
+      unique_id: "time_to_regeneration"
       icon: mdi:calendar-clock
+
+#-----------
+#UTILITY METER
+#-----------
+utility_meter:
+  waterusage_this_quarter:  
+    source: sensor.watermeter
+    cycle: quarter-hourly
+  waterusage_this_hour:
+    source: sensor.watermeter
+    cycle: hourly
+  waterusage_today:
+    source: sensor.watermeter
+    cycle: daily 
+  waterusage_this_month:
+    source: sensor.watermeter
+    cycle: monthly
+  watervusage_this_year:
+    source: sensor.watermeter
+    cycle: yearly 
+
+automation:
+  ####################################################
+  - id: set_water_softener_start_backwash
+    alias: Set water softener start Backwash
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.regeneration_pulse
+      to: 'on'
+    - platform: state
+      entity_id: button.test_button_reg_pulse
+    condition:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_select.water_softener_status
+        state: Idle
+    action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.water_softener_status
+        option: Backwash
+    - service: timer.start
+      entity_id: timer.timer_ws_backwash
+    - service: timer.start
+      entity_id: timer.timer_ws_total
+    initial_state: true
+  ####################################################
+  - id: set_water_softener_start_brine
+    alias: Set water softener start Brine
+    trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.timer_ws_backwash
+    condition:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_select.water_softener_status
+        state: Backwash
+    action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.water_softener_status
+        option: Brine
+    - service: timer.start
+      entity_id: timer.timer_ws_brine
+    initial_state: true
+  ####################################################
+  - id: set_water_softener_start_rinse
+    alias: Set water softener start Rinse
+    trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.timer_ws_brine
+    condition:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_select.water_softener_status
+        state: Brine
+    action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.water_softener_status
+        option: Rinse
+    - service: timer.start
+      entity_id: timer.timer_ws_rinse
+    initial_state: true
+  ####################################################
+  - id: set_water_softener_start_fill
+    alias: Set water softener start Fill
+    trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.timer_ws_rinse
+    condition:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_select.water_softener_status
+        state: Rinse
+    action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.water_softener_status
+        option: Fill
+    - service: timer.start
+      entity_id: timer.timer_ws_fill
+    initial_state: true
+  ####################################################
+  - id: set_water_softener_idle
+    alias: Set water softener Idle
+    trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.timer_ws_fill
+    condition:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_select.water_softener_status
+        state: Fill
+    action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.water_softener_status
+        option: Idle
+    - service: esphome.clack_meterstand_clack
+      data:
+        meter_value: 0
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.water_softener_meter_liters
+        value: 0
+    initial_state: true
+  ####################################################
