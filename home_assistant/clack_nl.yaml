@@ -203,10 +203,10 @@ automation:
         entity_id: input_number.water_softener_meter_liters
         value: 0
     initial_state: true
-  #--------------------------------------------------------
-  # opties: alarm zoutmelding en alarm hardheid meten. 
-  # vul je eigen mobile_app_iphone_van_xxx in. (voorbeeld)            
-  #--------------------------------------------------------
+  #------------------------------------------------------------------
+  # Automatisering opties: alarm zoutmelding en alarm hardheid meten. 
+  # vul je eigen mobile_app_iphone_van_xxx in. (als voorbeeld)            
+  #------------------------------------------------------------------
     - id: salt_level_alarm_notify
     alias: Zoutniveau alarm melding
     description: ''
