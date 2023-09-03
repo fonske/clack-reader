@@ -203,4 +203,57 @@ automation:
         entity_id: input_number.water_softener_meter_liters
         value: 0
     initial_state: true
-  ####################################################
+  #--------------------------------------------------------
+  # opties: alarm zoutmelding en alarm hardheid meten. 
+  # vul je eigen mobile_app_iphone_van_xxx in. (voorbeeld)            
+  #--------------------------------------------------------
+    - id: salt_level_alarm_notify
+    alias: Zoutniveau alarm melding
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.zout_bijvullen
+      to: ja
+    condition:
+    - condition: time
+      after: 07:30:00
+      before: '22:00:00'
+    action:
+    - service: notify.mobile_app_iphone_van_a_c_a
+      data:
+        title: Let op!
+        message: Zout niveau van ontharder is laag! Vandaag gaan bijvullen!
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    initial_state: 'true'
+    mode: single
+  ##################################################
+  - id: measure_hardness_notify
+    alias: Hardheid meten
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id:
+      - sensor.watermeter
+      above: 3000
+    condition:
+    - condition: time
+      after: 07:30:00
+      before: '22:00:00'
+    action:
+    - service: notify.mobile_app_iphone_van_a_c_a
+      data:
+        title: Let op!
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+        message: 'Ontharder hardheid meten: nu 3000 ltr'
+    mode: single
+    initial_state: 'true'
