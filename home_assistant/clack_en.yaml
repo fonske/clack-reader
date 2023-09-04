@@ -245,13 +245,13 @@ automation:
     action:
     - service: notify.mobile_app_iphone_van_a_c_a
       data:
-        title: Be Aware!
+        title: Be aware!
+        message: 'Measure hardness softener: used 3000 ltr'
         data:
           push:
             sound:
               name: default
               critical: 1
               volume: 1
-        message: 'Measure hardness softener: used 3000 ltr'
     mode: single
     initial_state: 'true'
