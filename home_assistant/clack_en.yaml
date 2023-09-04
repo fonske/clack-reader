@@ -227,6 +227,8 @@ automation:
               name: default
               critical: 1
               volume: 1
+    - delay:
+        minutes: 30
     initial_state: 'true'
     mode: single
   ####################################################
@@ -253,5 +255,7 @@ automation:
               name: default
               critical: 1
               volume: 1
+    - delay:
+        minutes: 30
     mode: single
     initial_state: 'true'
