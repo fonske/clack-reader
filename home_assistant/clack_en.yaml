@@ -201,4 +201,57 @@ automation:
         entity_id: input_number.water_softener_meter_liters
         value: 0
     initial_state: true
+  #------------------------------------------------------------------
+  # Extra options: Salt level alarm and hardness measurement alarm. 
+  # Fill in your own mobile_app_iphone_van_xxx in. (as an example)            
+  #------------------------------------------------------------------
+    - id: salt_level_alarm_notify
+    alias: Salt level alarm notify
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.fill_salt
+      to: "yes"
+    condition:
+    - condition: time
+      after: 07:30:00
+      before: '22:00:00'
+    action:
+    - service: notify.mobile_app_iphone_van_a_c_a
+      data:
+        title: Be aware!
+        message: Salt level watersoftener is low! Fill salt today!
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    initial_state: 'true'
+    mode: single
   ####################################################
+  - id: measure_hardness_notify
+    alias: Measure Hardness
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id:
+      - sensor.watermeter
+      above: 3000
+    condition:
+    - condition: time
+      after: 07:30:00
+      before: '22:00:00'
+    action:
+    - service: notify.mobile_app_iphone_van_a_c_a
+      data:
+        title: Be Aware!
+        data:
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+        message: 'Measure hardness softener: used 3000 ltr'
+    mode: single
+    initial_state: 'true'
