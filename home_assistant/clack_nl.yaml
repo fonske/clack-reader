@@ -229,6 +229,8 @@ automation:
               name: default
               critical: 1
               volume: 1
+    - delay:
+        minutes: 30
     initial_state: 'true'
     mode: single
   ##################################################
@@ -255,5 +257,7 @@ automation:
               critical: 1
               volume: 1
         message: 'Ontharder hardheid meten: nu 3000 ltr'
+    - delay:
+        minutes: 30
     mode: single
     initial_state: 'true'
