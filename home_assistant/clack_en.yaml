@@ -205,7 +205,7 @@ automation:
   # Extra options: Salt level alarm and hardness measurement alarm. 
   # Fill in your own mobile_app_iphone_van_xxx in. (as an example)            
   #------------------------------------------------------------------
-    - id: salt_level_alarm_notify
+  - id: salt_level_alarm_notify
     alias: Salt level alarm notify
     description: ''
     trigger:
