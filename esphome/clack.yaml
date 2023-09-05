@@ -313,7 +313,7 @@ number:
     max_value: 10
     initial_value: 1.5
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "cm"
     update_interval: 600s
     on_value:
       then:
@@ -339,7 +339,7 @@ number:
     max_value: 7200
     initial_value: 3200
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "l"
     on_value:
       then:
         - sensor.template.publish:
@@ -368,4 +368,4 @@ number:
     max_value: 21
     initial_value: 10
     restore_value: yes
-    unit_of_measurement: ""
+    unit_of_measurement: "days"
