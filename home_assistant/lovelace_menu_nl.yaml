@@ -135,7 +135,9 @@ views:
           - entity: binary_sensor.regeneratie_pulse
           - entity: sensor.salt_level
           - entity: button.test_button_use_pulse
-          - entity: button.test_button_reg_pulse
+          - entity: button.test_button_regen_pulse
+          - entity: switch.fancoil
+            name: Power
       - elements:
           - entity: sensor.salt_level
             image: local/images/softener.png
