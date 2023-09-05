@@ -66,19 +66,19 @@ template:
 #-----------
 utility_meter:
   waterusage_this_quarter:  
-    source: sensor.watermeter
+    source: sensor.water_meter
     cycle: quarter-hourly
   waterusage_this_hour:
-    source: sensor.watermeter
+    source: sensor.water_meter
     cycle: hourly
   waterusage_today:
-    source: sensor.watermeter
+    source: sensor.water_meter
     cycle: daily 
   waterusage_this_month:
-    source: sensor.watermeter
+    source: sensor.water_meter
     cycle: monthly
   watervusage_this_year:
-    source: sensor.watermeter
+    source: sensor.water_meter
     cycle: yearly 
 
 automation:
