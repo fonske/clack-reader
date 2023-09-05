@@ -8,7 +8,7 @@ views:
           - cards:
               - type: entities
                 entities:
-                  - entity: sensor.watermeter
+                  - entity: sensor.water_meter
                     type: custom:multiple-entity-row
                     icon: mdi:cup-water
                     name: Water softener
@@ -19,7 +19,7 @@ views:
                     entities:
                       - entity: sensor.time_to_regeneration
                         name: time left
-                      - entity: sensor.watersoftener_m3_left
+                      - entity: sensor.water_softener_m3_left
                         name: m3 left
                 style: |
                   ha-card {
@@ -32,10 +32,10 @@ views:
                   }          
                 title: Water softener
               - entities:
-                  - entity: sensor.watersoftener_ltr_left
+                  - entity: sensor.water_softener_ltr_left
                     max: 3200
                     min: 0
-                    name: Ltr used
+                    name: L used
                 height: 8px
                 decimal: false
                 positions:
@@ -118,22 +118,22 @@ views:
                   name: Total time left (4 cycles)
       - type: entities
         entities:
-          - entity: sensor.watermeter
-          - entity: sensor.watersoftener_ltr_left
-          - entity: sensor.watersoftener_m3_left
-          - entity: sensor.saltlevel_distance
+          - entity: sensor.water_meter
+          - entity: sensor.water_softener_ltr_left
+          - entity: sensor.water_softener_m3_left
+          - entity: sensor.salt_level_distance
             name: Distance
-          - entity: sensor.saltlevel_height
+          - entity: sensor.salt_level_height
             name: Height
-          - entity: sensor.saltlevel_procent
+          - entity: sensor.salt_level_percent
             name: Procent
           - entity: sensor.fill_salt
-          - entity: sensor.watersoftener_generated_on
+          - entity: sensor.water_softener_regenerated_on
           - entity: binary_sensor.watermeter_pulse
           - entity: binary_sensor.regeneration_pulse
           - entity: sensor.salt_level
           - entity: button.test_button_use_pulse
-          - entity: button.test_button_reg_pulse
+          - entity: button.test_button_regen_pulse
       - elements:
           - entity: sensor.salt_level
             image: local/images/softener.png
@@ -165,7 +165,7 @@ views:
             name: Waterusage today
           - entity: sensor.waterusage_this_month
             name: Waterusage this month
-          - entity: sensor.watervusage_this_year
+          - entity: sensor.waterusage_this_year
             name: Waterusage this year
       - type: custom:apexcharts-card
         graph_span: 7d
@@ -219,13 +219,13 @@ views:
               duration: 23h59m59s
       - type: entities
         entities:
-          - entity: number.min_distance_salt
-          - entity: number.max_distance_salt
+          - entity: number.min_salt_distance
+          - entity: number.max_salt_distance
           - entity: number.fill_salt_distance
           - entity: number.capacity_in_days
           - entity: number.capacity_in_liters
-          - entity: sensor.version
-          - entity: sensor.watersoftener_ip
+          - entity: sensor.versie
+          - entity: sensor.waterontharder_ip
           - entity: sensor.wifi_signal
           - entity: sensor.wifi_signal_db
         title: Settings
