@@ -177,7 +177,7 @@ sensor:
     state_class: "total_increasing"
     icon: mdi:water
     update_interval: 600s
-    unit_of_measurement: "ltr"
+    unit_of_measurement: "l"
     accuracy_decimals: 0
     lambda: |-
       return id(totalWaterUsage);
