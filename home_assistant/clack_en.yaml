@@ -52,7 +52,7 @@ template:
   sensor:
     - name: "time_to_regeneration" # custom sensor that calculates the expected number of days till the next regeneration
       state: >
-        {%- set time = (states('number.capacity_in_days') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.water_softener_generated_on')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
+        {%- set time = (states('number.capacity_in_days') | int * 86400) - (as_timestamp(now()) - as_timestamp((strptime(states('sensor.water_softener_regenerated_on')[4:15], '%d %b %H:%M').replace(year=now().year)))) | int  %}
         {%- set hours = ((time % 86400) // 3600) %}
         {%- set hours = '{}h '.format(hours) if hours > 0 else '' %}
         {%- set days = (time // 86400) %}
