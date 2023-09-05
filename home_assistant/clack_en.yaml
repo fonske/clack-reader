@@ -77,7 +77,7 @@ utility_meter:
   waterusage_this_month:
     source: sensor.water_meter
     cycle: monthly
-  watervusage_this_year:
+  waterusage_this_year:
     source: sensor.water_meter
     cycle: yearly 
 
