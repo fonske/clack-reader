@@ -59,7 +59,7 @@ class DistanceSensor : public PollingComponent, public sensor::Sensor, public UA
                             publish_state(distance/10);
                         }//if
                         else
-                            ESP_LOGD("custom", "Distance below lower limit.");     
+                            publish_state(0);     
                         
                     }//if
                     else
