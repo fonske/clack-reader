@@ -80,7 +80,7 @@ binary_sensor:
 #    icon: mdi:toggle-switch-variant
     filters:
       - delayed_on_off: 800ms
-     on_press:
+    on_press:
       then:
         - globals.set:
             id: totalWaterUsage
