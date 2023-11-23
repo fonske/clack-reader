@@ -20,6 +20,15 @@ packages:
       - esphome/board-esp32-wemos-s3.yaml
       # - esphome/board-esp8266.yaml
 
+## for developing/testing, uncomment local includes and comment out above remote_package packages part.
+#packages:
+#  substitutions: !include .clack-labels-en.yaml
+#  substitutions: !include .clack-labels-nl.yaml
+#  device_base1:  !include board-esp32.yaml
+#  device_base1:  !include board-esp32s3.yaml
+#  device_base1:  !include board-esp32-wemos-s3.yaml
+#  device_base1:  !include board-esp8266.yaml
+
 esphome:
   name: ${name}
   includes:
@@ -55,7 +64,7 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "${name} hotspot"
+    ssid: "${name}"
     password: "configesp"
     ap_timeout: 15s
 
@@ -90,7 +99,7 @@ sensor:
     sensors:
       name: ${clack_distance}
       id:  clack_distance
-      unit_of_measurement: "cm"
+      unit_of_measurement: cm
       accuracy_decimals: 1
       icon: "mdi:arrow-expand-vertical" 
       filters:
@@ -138,7 +147,7 @@ sensor:
   - platform: copy
     source_id: clack_procent
     id: clack_salt_level
-    name: "Salt level"
+    name: Salt level
     filters:
     - lambda: |-
         if (x >= 80) return 100;
@@ -155,7 +164,7 @@ sensor:
   - platform: template
     id: clack_height
     name: ${clack_height}
-    unit_of_measurement: "cm"
+    unit_of_measurement: cm
     accuracy_decimals: 1
     icon: "mdi:hydraulic-oil-level" 
     update_interval: 600s
@@ -174,10 +183,11 @@ sensor:
   - platform: template
     id: clack_watermeter
     name: ${clack_watermeter_total}
-    state_class: "total_increasing"
     icon: mdi:water
     update_interval: 600s
-    unit_of_measurement: "l"
+    unit_of_measurement: L
+    device_class: water
+    state_class: total_increasing
     accuracy_decimals: 0
     lambda: |-
       return id(totalWaterUsage);
@@ -185,28 +195,30 @@ sensor:
   - platform: template  
     id: clack_m3_left
     name: ${clack_m3_left}
-    unit_of_measurement: 'm3'
+    unit_of_measurement: m³
+    device_class: water
     accuracy_decimals: 2
     update_interval: 600s
 
   - platform: template
     id: clack_l_left
     name: ${clack_l_left}
-    unit_of_measurement: 'l'
+    unit_of_measurement: L
+    device_class: water
     accuracy_decimals: 0
     update_interval: 600s
 
 # Diagnostics wifi and uptime      
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     id: clack_wifi_signal_db
-    name: "WiFi Signal dB"
+    name: WiFi Signal dB
     update_interval: 60s
     entity_category: diagnostic
 
   - platform: copy # Reports the WiFi signal strength in %
     source_id: clack_wifi_signal_db
     id: clack_wifi_signal_db_percent
-    name: "WiFi Signal"
+    name: WiFi Signal
     filters:
       - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
     unit_of_measurement: "%"
@@ -257,7 +269,7 @@ number:
     max_value: 10
     initial_value: 0
     restore_value: yes
-    unit_of_measurement: "cm"
+    unit_of_measurement: cm
     on_value:
       then:
         - sensor.template.publish:
@@ -285,7 +297,7 @@ number:
     max_value: 100
     initial_value: 30
     restore_value: yes
-    unit_of_measurement: "cm"
+    unit_of_measurement: cm
     on_value:
       then:
         - sensor.template.publish:
@@ -313,7 +325,7 @@ number:
     max_value: 10
     initial_value: 1.5
     restore_value: yes
-    unit_of_measurement: "cm"
+    unit_of_measurement: cm
     update_interval: 600s
     on_value:
       then:
@@ -339,7 +351,7 @@ number:
     max_value: 7200
     initial_value: 3200
     restore_value: yes
-    unit_of_measurement: "l"
+    unit_of_measurement: L
     on_value:
       then:
         - sensor.template.publish:
@@ -368,4 +380,4 @@ number:
     max_value: 21
     initial_value: 10
     restore_value: yes
-    unit_of_measurement: "days"
+    unit_of_measurement: "${days}"
