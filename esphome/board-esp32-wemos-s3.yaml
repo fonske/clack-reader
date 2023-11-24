@@ -16,8 +16,8 @@ uart:
   baud_rate: 9600
 
 # get rid of CDC error
-#esphome:
-#  platformio_options:
+esphome:
+  platformio_options:
 #    board_build.arduino.memory_type: qio_qspi
 #    board_upload.ram_size: 327680
 #    board_upload_maximum_size: 4193404
@@ -26,8 +26,8 @@ uart:
 #      "-DBOARD_HAS_PSRAM",
 #      "-DARDUINO_LOLIN_S3_MINI",
 #      "-DARDUINO_USB_MODE=1"]
-#    board_build.extra_flags:
-#      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
+    board_build.extra_flags:
+      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
 
 # Enable/Disable logging
 logger:
