@@ -6,42 +6,35 @@ esp32:
   framework:
     type: arduino
 #    version: latest
-  flash_size: 4MB
+#  flash_size: 4MB
 
+# the DFrobot A02YYUW ultrasonic is uart
 uart:
   id: uart_bus
   tx_pin: 35  #SDA
   rx_pin: 36  #SCL
   baud_rate: 9600
 
-#status_led:
-#  pin:
-#    number: 47
-
 # get rid of CDC error
-esphome:
-  platformio_options:
-    board_build.arduino.memory_type: qio_qspi
-    board_upload.ram_size: 327680
-    board_upload_maximum_size: 4193404
-    board_upload_speed: 460800
-    build_flags: [
-      "-DBOARD_HAS_PSRAM",
-      "-DARDUINO_LOLIN_S3_MINI",
-      "-DARDUINO_USB_MODE=1"]
-    board_build.extra_flags:
-      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
+#esphome:
+#  platformio_options:
+#    board_build.arduino.memory_type: qio_qspi
+#    board_upload.ram_size: 327680
+#    board_upload_maximum_size: 4193404
+#    board_upload_speed: 460800
+#    build_flags: [
+#      "-DBOARD_HAS_PSRAM",
+#      "-DARDUINO_LOLIN_S3_MINI",
+#      "-DARDUINO_USB_MODE=1"]
+#    board_build.extra_flags:
+#      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
 
 # Enable/Disable logging
 logger:
   logs:
-    modbus_controller.sensor: WARN
-    modbus_controller.output: WARN
-    modbus.number: WARN
     esp32.preferences: WARN
     sensor: WARN
     text_sensor: WARN
-    dht.sensor: WARN
     switch: WARN
     button: WARN
     number: WARN
@@ -49,8 +42,12 @@ logger:
 
 wifi:
   ap:
-    ssid: "${name} hotspot"
+    ssid: "${name}"
     password: "configesp"
+
+# enable IMPROV wifi, connection hotspot via bluetooth. see https://www.improv-wifi.com/
+esp32_improv:
+  authorizer: None 
 
 captive_portal:
 
