@@ -32,5 +32,5 @@ packages:
 Currently supported languages are en, nl.
 In order to change language, edit file `esphome/clack.yaml`, and change include file (esphome-/.clack-labels-<language>.yaml)
 
-## Contact
-Contact me: alphonsuijtdehaag at gmail dot com, if you are interested in a PCB with a ESP32 (mh-et-live or lilygo ESP32S3-T7 or Wemos s3 mini) and ultrasonic sensor (DFrobot)
+## end_of_life
+This project is not longer maintained. Go to Clack reader V3 for a newer design of the clack reader.
