@@ -13,7 +13,7 @@ packages:
     url: https://github.com/fonske/clack-reader
     ref: main
     refresh: 0s
-    files: [ esphome/.clack-labels-nl.yaml, esphome/board-esp32-wemos-s3.yaml ]
+    files: [ esphome/.clack-labels-en.yaml, esphome/board-esp32-wemos-s3.yaml ]
 ## choices are: esphome/.clack-labels-en.yaml, esphome/.clack-labels-nl.yaml
 ## esphome/board-esp32.yaml, esphome/board-esp32s3.yaml,
 ## esphome/board-esp32-wemos-s3.yaml, esphome/board-esp8266.yaml
