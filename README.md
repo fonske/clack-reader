@@ -33,4 +33,4 @@ Currently supported languages are en, nl.
 In order to change language, edit file `esphome/clack.yaml`, and change include file (esphome-/.clack-labels-<language>.yaml)
 
 ## end_of_life
-This project is not longer maintained. Go to Clack reader V3 for a newer design of the clack reader.
+This project is not longer maintained. Go to Clack reader V4 for a newer design of the clack reader.
